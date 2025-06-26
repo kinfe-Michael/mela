@@ -1,5 +1,6 @@
 import BottomContainer from "./components/BottomContainer";
-import MusicCard from "./components/MusicCard";
+import ProductCard from "./components/ProductCard";
+import MusicCard from "./components/ProductCard";
 import PageWraper from "./components/PageWraper";
 import Scroller from "./components/Scroller";
 import Sidebar from "./components/sidebar";
@@ -8,11 +9,12 @@ export default function Home() {
   return (
     <PageWraper>
       <Scroller title="favorite">
-        <MusicCard
+       <ProductCard
           url="/yohana.jpg"
-          alt="yohana"
-          title="Yetalesh"
-          artist="Yohana"
+          alt="Awesome Item"
+          productName="Awesome Collectible"
+          price={75.00}
+          
         />
       </Scroller>
     </PageWraper>

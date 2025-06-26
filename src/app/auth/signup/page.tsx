@@ -39,14 +39,14 @@ export default function App() {
   };
 
   const togglePasswordVisibility = () => {
-    setShowPassword((prev) => !prev);
+    setShowPassword((prev) => !prev); 
   };
 
   return (
-    <div className="min-h-screen bg-black flex items-center justify-center p-4 sm:p-6 md:p-8">
-      <Card className="w-full max-w-sm bg-gray-900 text-white rounded-xl shadow-lg border-gray-700">
+    <div className="min-h-screen mt-16 bg- flex items-center justify-center p-4 sm:p-6 md:p-8">
+      <Card className="w-full max-w-sm bg-gray-100  rounded-xl shadow-lg border-gray-200">
         <CardHeader className="text-center">
-          <CardTitle className="text-3xl font-bold text-white">Create an Account</CardTitle>
+          <CardTitle className="text-3xl font-bold ">Create an Account</CardTitle>
           <CardDescription className="text-gray-400">
             Join us today! Enter your details below.
           </CardDescription>
@@ -54,7 +54,7 @@ export default function App() {
         <CardContent>
           <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
             <div className="space-y-2">
-              <Label htmlFor="username" className="text-gray-300">Username</Label>
+              <Label htmlFor="username" className="text-gray-600">Username</Label>
               <div className="relative">
                 <AiOutlineUser className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-500 text-lg" />
                 <Controller<SignupFormInputs>
@@ -66,7 +66,7 @@ export default function App() {
                       id="username"
                       placeholder="john.doe"
                       type="text"
-                      className="pl-10 bg-gray-800 border-gray-700 text-white placeholder-gray-500 focus:ring-blue-500 focus:border-blue-500"
+                      className="pl-10 bg-gray-100 border-gray-200  placeholder-gray-500 focus:ring-blue-500 focus:border-blue-500"
                       {...field}
                     />
                   )}
@@ -96,7 +96,7 @@ export default function App() {
                       id="email"
                       placeholder="john.doe@example.com"
                       type="email"
-                      className="pl-10 bg-gray-800 border-gray-700 text-white placeholder-gray-500 focus:ring-blue-500 focus:border-blue-500"
+                      className="pl-10 bg-gray-100 border-gray-200  placeholder-gray-500 focus:ring-blue-500 focus:border-blue-500"
                       {...field}
                     />
                   )}
@@ -120,7 +120,7 @@ export default function App() {
                       id="password"
                       placeholder="••••••••"
                       type={showPassword ? "text" : "password"}
-                      className="pl-10 pr-10 bg-gray-800 border-gray-700 text-white placeholder-gray-500 focus:ring-blue-500 focus:border-blue-500"
+                      className="pl-10 pr-10 bg-gray-100 border-gray-200  placeholder-gray-500 focus:ring-blue-500 focus:border-blue-500"
                       {...field}
                     />
                   )}
@@ -159,16 +159,14 @@ export default function App() {
           )}
 
           <div className="relative flex items-center justify-center my-6">
-            <div className="absolute inset-0 flex items-center">
-              <span className="w-full border-t border-gray-700"></span>
-            </div>
-            <div className="relative z-10 px-4 bg-gray-900 text-gray-400 text-sm">
+            
+            <div className="relative z-10 px-4  text-gray-800 text-sm">
               OR
             </div>
           </div>
           <Button
             variant="outline"
-            className="w-full flex items-center justify-center gap-2 bg-gray-800 border-gray-700 text-white hover:bg-gray-700 font-bold py-2 rounded-md transition-colors duration-200"
+            className="w-full flex items-center justify-center gap-2 bg-gray-100 border-gray-300  hover:bg-gray-700 font-bold py-2 rounded-md transition-colors duration-200"
             onClick={handleGoogleSignup}
           >
             <AiOutlineGoogle className="text-lg" />

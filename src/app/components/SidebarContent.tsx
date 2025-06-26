@@ -16,9 +16,10 @@ import {
   HiViewList,
 } from "react-icons/hi";
 import { HiLanguage, HiPlusCircle } from "react-icons/hi2";
+import { BiCart } from "react-icons/bi";
 function SidebarContent() {
   function SideBarButtons({ children }: { children: ReactNode }) {
-    return <Button className="hover:text-gray-500">{children}</Button>;
+    return <Button className="bg-white hover:bg-gray-200 text-black">{children}</Button>;
   }
   function SideBarcard({
     title,
@@ -28,9 +29,9 @@ function SidebarContent() {
     children: ReactNode;
   }) {
     return (
-      <Card className="bg-[#161616] p-1 lg:p-4 gap-1 border-0">
+      <Card className=" p-1 lg:p-4 gap-1 border-0">
         <CardHeader>
-          <CardTitle className="text-white font-light">{title}</CardTitle>
+          <CardTitle className=" font-light">{title}</CardTitle>
         </CardHeader>
         <CardContent className="flex flex-col items-start">
           {children}
@@ -39,49 +40,28 @@ function SidebarContent() {
     );
   }
   return (
-    <div className="flex text-sm flex-col gap-1">
+    <div className="flex bg-white text-sm flex-col gap-1">
       <SideBarcard title="Menu">
         <SideBarButtons>
           <HiSun />
-          Discover
+          Catagory
         </SideBarButtons>
         <SideBarButtons>
           <HiCheckCircle />
-          Albums
+          Products
         </SideBarButtons>
         <SideBarButtons>
-          <HiMicrophone />
-          Artist
+          <BiCart/>
+          Cart
         </SideBarButtons>
-        <SideBarButtons>
-          <HiMusicNote />
-          Song
-        </SideBarButtons>
+      
         <SideBarButtons>
           <CiSettings />
           Settings
         </SideBarButtons>
       </SideBarcard>
-      <SideBarcard title="Library">
-        <SideBarButtons>
-          <HiHeart className="text-red-600" />
-          Favorite
-        </SideBarButtons>
-        <SideBarButtons>
-          <HiClock />
-          Recent
-        </SideBarButtons>
-      </SideBarcard>
-      <SideBarcard title="Playlist">
-        <SideBarButtons>
-          <HiPlusCircle />
-          Create new
-        </SideBarButtons>
-        <SideBarButtons>
-          <HiViewList />
-          Sad soul
-        </SideBarButtons>
-      </SideBarcard>
+   
+   
       
     </div>
   );

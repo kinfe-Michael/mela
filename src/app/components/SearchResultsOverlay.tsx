@@ -53,9 +53,9 @@ export function SearchResultsOverlay({ searchTerm, onClose,setSearchTerm }: Sear
   return (
     <Card
       className="
-        fixed top-0 left-0 w-full h-full rounded-none // Default (mobile) full screen
+        fixed top-0 bg-white text-black left-0 w-full h-full rounded-none // Default (mobile) full screen
         md:absolute md:top-full md:mt-2 md:left-0 md:right-0 // Desktop positioning
-        bg-black text-white border border-gray-700 // Your specified dark UI
+        border border-gray-200 // Your specified dark UI
         md:w-full md:h-auto md:max-h-[80vh] md:rounded-md // Desktop sizing
         lg:max-w-xl lg:mx-auto // Optional: Limit width and center on large screens
         z-[60] overflow-hidden // Ensure it's above other content and clips overflow
@@ -74,11 +74,11 @@ export function SearchResultsOverlay({ searchTerm, onClose,setSearchTerm }: Sear
                 className="flex-grow  flex w-full justify-start md:hidden md:ml-10 lg:ml-40 relative"
                 // ref={searchContainerRef}
               >
-                <div className="bg-gradient-to-r w-full from-[#FF3B30] via-black to-black gap-4 flex items-center border border-gray-700 rounded-full max-w-min px-4 h-10">
+                <div className="bg-gradient-to-r w-full  gap-4 flex items-center border border-gray-400 rounded-full max-w-min px-4 h-10">
                   <HiMagnifyingGlass className="text-2xl font-bold" />
                   <input
                     // ref={searchInputRef}
-                    className="focus:outline-0 min-w-[200px] bg-transparent text-white placeholder-gray-400 w-full"
+                    className="focus:outline-0 min-w-[200px] bg-transparent  placeholder-gray-500 w-full"
                     type="text"
                     placeholder="Search..."
                     // onFocus={handleFocus}
@@ -99,7 +99,7 @@ export function SearchResultsOverlay({ searchTerm, onClose,setSearchTerm }: Sear
       <CardContent className="h-full md:h-auto">
         {filteredResults.length > 0 ? (
           <ScrollArea className="h-full max-h-[calc(100vh-150px)] md:max-h-[300px]">
-            <ul className="space-y-2 pb-4">
+            <ul className="space-y-2 text-black pb-4">
               {filteredResults.map((item) => (
                 <li
                   key={item.id} 
@@ -111,7 +111,7 @@ export function SearchResultsOverlay({ searchTerm, onClose,setSearchTerm }: Sear
                     className="w-12 h-12 object-cover rounded-md flex-shrink-0"
                   />
                   <div className="flex-grow">
-                    <p className="text-base font-semibold text-white">{item.mainText}</p>
+                    <p className="text-base font-semibold ">{item.mainText}</p>
                     <p className="text-sm text-gray-400">{item.subText}</p>
                   </div>
                 </li>

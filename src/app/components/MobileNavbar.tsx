@@ -1,15 +1,15 @@
 "use client";
 import React, { useState } from "react";
-import { Home, Library, Search, Play } from "lucide-react"; // Importing icons from lucide-react
+import { Home, Library, Search } from "lucide-react"; // Importing icons from lucide-react
 import { LucideIcon } from "lucide-react"; // Import the type for Lucide icons
 import { openSearchBar } from "@/lib/searchStateOperation";
-
+import { BiCart } from "react-icons/bi";
 export default function MobileNavbar() {
   const [activeLink, setActiveLink] = useState<string>("home");
 
   return (
     <nav
-      className="fixed bottom-0 left-0 w-full bg-gray-900 text-white p-2
+      className="fixed bottom-0 left-0 w-full bg-white text-black p-2
                  flex justify-around items-center rounded-t-xl shadow-lg
                  md:hidden z-50"
     >
@@ -23,10 +23,10 @@ export default function MobileNavbar() {
 
       <NavItem
         icon={Library}
-        label="Library"
-        linkName="library"
-        active={activeLink === "library"}
-        onClick={() => setActiveLink("library")}
+        label="Catagory"
+        linkName="Catagory"
+        active={activeLink === "Catagory"}
+        onClick={() => setActiveLink("Catagory")}
       />
 
       <NavItem
@@ -41,25 +41,19 @@ export default function MobileNavbar() {
       />
 
       <NavItem
-        icon={Play}
-        label="Playing"
-        linkName="playing"
-        active={activeLink === "playing"}
-        onClick={() => setActiveLink("playing")}
+        icon={BiCart}
+        label="Cart"
+        linkName="Cart"
+        active={activeLink === "Cart"}
+        onClick={() => setActiveLink("Cart")}
       />
     </nav>
   );
 }
 
-interface NavItemProps {
-  icon: LucideIcon;
-  label: string;
-  linkName: string;
-  active: boolean;
-  onClick: () => void;
-}
 
-const NavItem: React.FC<NavItemProps> = ({
+
+const NavItem: React.FC<any> = ({
   icon: Icon,
   label,
   active,
@@ -67,10 +61,10 @@ const NavItem: React.FC<NavItemProps> = ({
 }) => {
   return (
     <button
-      className={`flex flex-col items-center px-4 py-2 rounded-lg transition-colors duration-200
+      className={`flex flex-col items-center px-4 rounded-lg transition-colors duration-200
                   ${
                     active
-                      ? "text-[#eb5048] bg-gray-800"
+                      ? "text-[#eb5048] bg-white"
                       : "text-gray-400 hover:text-blue-300 hover:bg-gray-800"
                   }`}
       onClick={onClick}

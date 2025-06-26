@@ -16,7 +16,7 @@ function Sidebar() {
   return (
     <aside
       className={cn(
-        "fixed hidden  bg-black  lg:flex flex-col  left-0 top-16 bottom-16 w-64  p-4 overflow-y-auto"
+        "fixed hidden  lg:flex flex-white  left-0 top-16 bottom-16 w-64  p-4 overflow-y-auto"
       )}
     >
      <SidebarContent/>
