@@ -34,7 +34,7 @@ function ProductCard({
       "
     >
       <Image
-        src={url}
+        src={"/yohana.jpg"}
         alt={alt}
         height={250} // Increased height for better product display
         width={250}  // Increased width for better product display

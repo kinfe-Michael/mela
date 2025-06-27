@@ -1,16 +1,19 @@
-// pages/products/[productId].tsx
+// app/products/[productId]/page.tsx
+// This is a React Server Component by default in the App Router.
+// It inherently achieves SSR for data fetching and initial render.
 
 import React from 'react';
+import { notFound } from 'next/navigation'; // For handling 404s
 
-import type { NextPage } from 'next'; // Type for Next.js page components
+import { Product } from '@/types/Product'; // Adjust path to your Product interface (using alias)
+import PageWraper from '@/app/components/PageWraper';
+import SingleProductDisplay from '../components/SingleProductDisplay';
+import SimilarProducts from '../components/SimilarProducts';
 
-import PageWraper from '../../components/PageWraper'; // Adjust path if necessary
-import SingleProductDisplay from '../components/SingleProductDisplay'; // Adjust path if necessary
-import { Product } from '@/types/Product';
- // Adjust path to your Product interface
+// --- MOCK DATA AND DATA FETCHING FUNCTIONS ---
+// In a real application, these would be actual API calls or database queries.
 
-// Mock data (in a real app, you'd fetch this from an API)
-const allProducts: Product[] = [ // Explicitly type the array
+const allProducts: Product[] = [
   {
     id: 'headphones',
     name: 'Wireless Bluetooth Headphones',
@@ -35,29 +38,90 @@ const allProducts: Product[] = [ // Explicitly type the array
     rating: 4.8,
     reviewsCount: 560,
   },
-  // Add more mock products as needed
+  {
+    id: 'smartwatch',
+    name: 'Smart Watch Pro',
+    price: 249.00,
+    description: 'Track your fitness and stay connected with the Smart Watch Pro. Features heart rate monitoring, GPS, and notifications. Compatible with iOS and Android.',
+    imageUrl: 'https://placehold.co/400x400/EEF2FF/3F20BA?text=Smartwatch',
+    category: 'Electronics',
+    brand: 'WearTech',
+    inStock: true,
+    rating: 4.2,
+    reviewsCount: 85,
+  },
+  {
+    id: 'laptop',
+    name: 'UltraBook Air',
+    price: 1199.00,
+    description: 'Lightweight and powerful, the UltraBook Air is perfect for productivity on the go. Featuring a stunning Retina display and long battery life.',
+    imageUrl: 'https://placehold.co/400x400/EEF2FF/3F20BA?text=Laptop',
+    category: 'Electronics',
+    brand: 'ZenPC',
+    inStock: true,
+    rating: 4.7,
+    reviewsCount: 300,
+  },
+  {
+    id: 'earbuds',
+    name: 'Compact Wireless Earbuds',
+    price: 129.99,
+    description: 'Immersive sound in a tiny package. These earbuds offer superior audio quality and a snug fit for all-day comfort. Comes with a portable charging case.',
+    imageUrl: 'https://placehold.co/400x400/EEF2FF/3F20BA?text=Earbuds',
+    category: 'Electronics',
+    brand: 'SoundStream',
+    inStock: true,
+    rating: 4.3,
+    reviewsCount: 210,
+  },
 ];
 
-export default async function ProductDetailPage  ({params}:any) {
-  const {productId} = await params
+async function getProductData(productId: string): Promise<Product | undefined> {
+  // Simulate network delay
+  await new Promise(resolve => setTimeout(resolve, 100));
+  return allProducts.find(p => p.id === productId);
+}
 
-  // In a real application, you would fetch data here based on `productId`
-  // For demonstration, we'll find it from our mock array.
-  const product: Product | undefined = allProducts.find(p => p.id === productId);
+async function getSimilarProducts(currentProductId: string, category: string): Promise<Product[]> {
+  // Simulate network delay
+  await new Promise(resolve => setTimeout(resolve, 50));
+  // Filter products by category, excluding the current product itself
+  return allProducts.filter(p => p.category === category && p.id !== currentProductId);
+}
+
+// --- PAGE COMPONENT ---
+
+// Define props for the page component, including the dynamic segment params
+interface ProductDetailPageProps {
+  params: {
+    productId: string; // The dynamic segment from the folder name [productId]
+  };
+}
+
+// The main page component is an async Server Component
+export default async function ProductDetailPage({ params }: ProductDetailPageProps) {
+  // Correct way to access the dynamic parameter in an App Router Server Component
+  const { productId } = params;
+
+  // Fetch the main product data
+  const product = await getProductData(productId);
 
   if (!product) {
-    // Handle case where product is not found (e.g., show a 404 page)
-    return (
-      <PageWraper>
-        <div className="text-center p-8 text-xl text-gray-600">Product not found.</div>
-      </PageWraper>
-    );
+    notFound(); // Call Next.js's notFound() helper if product is not found
   }
+
+  // Fetch similar products based on the current product's category
+  // This also happens on the server as part of this Server Component
+  const similarProducts = await getSimilarProducts(product.id, product.category);
 
   return (
     <PageWraper>
       <SingleProductDisplay product={product} />
+
+      {/* Render the SimilarProducts component at the bottom */}
+      {similarProducts.length > 0 && (
+        <SimilarProducts products={similarProducts} />
+      )}
     </PageWraper>
   );
-};
-
+}
