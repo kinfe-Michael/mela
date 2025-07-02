@@ -21,6 +21,7 @@ const SimilarProducts: React.FC<SimilarProductsProps> = ({ products }) => {
         {products.map((product) => (
           <ProductCard
             key={product.id} // Important for React list rendering
+            id={product.id} // Important for React list rendering
             url={product.imageUrl}
             alt={product.name}
             productName={product.name}

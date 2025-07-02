@@ -8,7 +8,7 @@ import { Product } from '@/types/Product'; // Adjust path based on where you put
 
 // Mock product data for demonstration
 const mockProduct: Product = {
-  id: 'prod123',
+  id: 'headphones',
   name: 'Wireless Bluetooth Headphones',
   price: 79.99,
   description: 'Experience immersive audio with our premium wireless Bluetooth headphones. Featuring crystal-clear sound, comfortable over-ear design, and long-lasting battery life. Perfect for music lovers and professionals alike. Comes with noise-cancellation and a built-in microphone for calls. Available in black and silver.',
