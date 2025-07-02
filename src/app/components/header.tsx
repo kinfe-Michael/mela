@@ -8,6 +8,7 @@ import PhoneSidebar from "./PhoneSidebar";
 import { SearchResultsOverlay } from "./SearchResultsOverlay";
 import useWashintStore from "@/store/useWashintStore";
 import { openSearchBar,closeSearchBar } from "@/lib/searchStateOperation";
+import Link from "next/link";
 function Header() {
   const [showSearchResults, setShowSearchResults] = useState<boolean>(false); 
   const [searchTerm, setSearchTerm] = useState<string>(""); 
@@ -53,7 +54,7 @@ function Header() {
   return (
     <header className="fixed flex top-0 h-16 left-0 right-0 z-50 bg-gray-100  items-center px-4 shadow-md">
       <HiSparkles className="text-xl" />
-      <h1 className="font-semibold">Mela</h1>
+      <Link href={"/"} className="font-semibold">Mela</Link>
       <div
         className="flex-grow ml-4  md:ml-10 lg:ml-40 relative"
         ref={searchContainerRef}
@@ -76,10 +77,10 @@ function Header() {
       </div>
       <div className="flex flex-grow items-center justify-end gap-2">
         
-        <Button className="px-2 text-xs hidden md:block font-bold bg-transparent shadow-none hover:bg-gray-200 text-black ">Catagory</Button>
-        <Button className="px-2 text-xs hidden md:block font-bold bg-transparent shadow-none hover:bg-gray-200 text-black ">products</Button>
-        <Button className="px-2 text-xs hidden md:block font-bold bg-transparent shadow-none hover:bg-gray-200 text-black ">order</Button>
-        <Button className="px-2 text-xs hidden md:block font-bold bg-transparent shadow-none hover:bg-gray-200 text-black ">cart</Button>
+        <Link href={"/category"} className="px-2 text-xs hidden md:block font-bold bg-transparent shadow-none hover:bg-gray-200 text-black ">Catagory</Link >
+        <Link href={"/"} className="px-2 text-xs hidden md:block font-bold bg-transparent shadow-none hover:bg-gray-200 text-black ">products</Link >
+        <Link href={"/orders"} className="px-2 text-xs hidden md:block font-bold bg-transparent shadow-none hover:bg-gray-200 text-black ">order</Link >
+        <Link href={"/cart"} className="px-2 text-xs hidden md:block font-bold bg-transparent shadow-none hover:bg-gray-200 text-black ">cart</Link>
         <Button className="bg-[#FF3B30] text-xs px-3 hover:bg-[#ff3a30d8] font-bold">
           Sign up
         </Button>
