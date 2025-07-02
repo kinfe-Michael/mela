@@ -10,6 +10,7 @@ export default function Home() {
     <PageWraper>
       <Scroller title="favorite">
        <ProductCard
+       id="headphones"
           url="/yohana.jpg"
           alt="Awesome Item"
           productName="Awesome Collectible"

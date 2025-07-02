@@ -1,11 +1,13 @@
 "use client"
 import Image from "next/image";
+import Link from "next/link";
 
 interface ProductCardProps {
   url: string;
   alt: string;
   productName: string;
   price: number;
+  id:string
   // You might want to add an optional handler for the "Add to Cart" button
 
 }
@@ -15,10 +17,11 @@ function ProductCard({
   alt,
   productName,
   price,
+  id
  
 }: ProductCardProps) {
   return (
-    <div
+    <Link href={`/products/${id}`}
       className="
         lg:p-2
         w-[150px]
@@ -65,7 +68,7 @@ function ProductCard({
           Add to Cart
         </button>
       </div>
-    </div>
+    </Link>
   );
 }
 
