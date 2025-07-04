@@ -66,5 +66,9 @@ export const orderItemRelations = relations(orderItems,({one})=>({
     order:one(orders,{
         fields:[orderItems.orderId],
         references:[orders.id]
+    }),
+      product: one(products, { // This is the new part
+        fields: [orderItems.productId],
+        references: [products.id]
     })
 }))
