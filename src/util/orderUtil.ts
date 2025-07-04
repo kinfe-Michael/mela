@@ -1,9 +1,11 @@
 import { db } from './db'; // Assuming your Drizzle client is exported from here
-import { users, products, orders, orderItems, orderStatusEnum } from '../db/schema';
+import {  products, orders, orderItems, orderStatusEnum } from '../db/schema';
 import { eq, and } from 'drizzle-orm';
-import { hashPassword } from './passwordHash';
 
-
+interface PaginationOptions {
+  limit?: number;
+  offset?: number;
+}
 
 
 
@@ -85,16 +87,20 @@ export async function getOrderById(orderId: string) {
   });
 }
 
-export async function getOrdersByBuyer(buyerId: string) {
+
+
+export async function getOrdersByBuyer(buyerId: string, options?: PaginationOptions) {
   return db.query.orders.findMany({
     where: eq(orders.buyerId, buyerId),
     with: {
       orderItems: {
         with: {
-          product: true,
+          product: true, // Assuming you've added the product relation to orderItemRelations
         },
       },
     },
+    limit: options?.limit,
+    offset: options?.offset,
   });
 }
 
