@@ -1,7 +1,13 @@
-import { db } from './db'; // Assuming your Drizzle client is exported from here
+import { db } from './db'; 
 import { users, products, orders, orderItems, orderStatusEnum } from '../db/schema';
-import { eq, and } from 'drizzle-orm';
+import { eq } from 'drizzle-orm';
 import { hashPassword } from './passwordHash';
+
+
+interface PaginationOptions {
+  limit?: number; 
+  offset?: number; 
+}
 
 export async function addUser(userData: Omit<typeof users.$inferInsert, 'id' | 'passwordHash' | 'createdAt' | 'updatedAt'> & { passwordPlain: string }) {
   const hashedPassword = await hashPassword(userData.passwordPlain);
@@ -69,17 +75,29 @@ export async function getProductById(productId: string) {
   });
 }
 
-export async function getProductsBySeller(sellerId: string) {
+export async function getProductsBySeller(sellerId: string, options?: PaginationOptions) {
   return db.query.products.findMany({
     where: eq(products.sellerId, sellerId),
+    with: { 
+      seller: true,
+    },
+    limit: options?.limit,
+    offset: options?.offset,
   });
 }
 
-export async function getAllProducts() {
+interface PaginationOptions {
+  limit?: number; 
+  offset?: number; 
+}
+
+export async function getAllProducts(options?: PaginationOptions) {
   return db.query.products.findMany({
     with: {
-      seller: true,
+      seller: true, 
     },
+    limit: options?.limit,   
+    offset: options?.offset, 
   });
 }
 
