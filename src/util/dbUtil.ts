@@ -1,6 +1,6 @@
 import { db } from './db'; 
 import { users, products, orders, orderItems, orderStatusEnum } from '../db/schema';
-import { eq } from 'drizzle-orm';
+import { eq,InferInsertModel,InferSelectModel } from 'drizzle-orm';
 import { hashPassword } from './passwordHash';
 
 
@@ -56,13 +56,26 @@ export async function deleteUser(userId: string) {
   }
 }
 
-export async function addProduct(productData: Omit<typeof products.$inferInsert, 'id' | 'createdAt' | 'updatedAt'>) {
+interface AddProductResult {
+  success: boolean;
+  product?: InferSelectModel<typeof products>; // The inferred select model for a product
+  error?: string;
+}
+
+export async function addProduct(
+  productData: Omit<InferInsertModel<typeof products>, 'id' | 'createdAt' | 'updatedAt'>
+): Promise<AddProductResult> {
   try {
     const [newProduct] = await db.insert(products).values(productData).returning();
-    return newProduct;
-  } catch (error) {
+    // If newProduct is null/undefined (though .returning() usually ensures it for successful inserts)
+    if (!newProduct) {
+      return { success: false, error: "Product insertion returned no data." };
+    }
+    return { success: true, product: newProduct };
+  } catch (error: any) {
     console.error("Error adding product:", error);
-    throw error;
+    // Return an error message if the insertion fails
+    return { success: false, error: error.message || "Failed to add product due to an unknown error." };
   }
 }
 
