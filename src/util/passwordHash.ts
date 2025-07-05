@@ -1,6 +1,6 @@
 
 import bcrypt from 'bcrypt';
-
+ 
 // Configuration for bcrypt
 const saltRounds = 10;
 

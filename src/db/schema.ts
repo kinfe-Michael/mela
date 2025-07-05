@@ -9,7 +9,7 @@ export const users = pgTable('users',{
     phoneNumber:integer('phone_number').notNull().unique(),
     passwordHash: varchar('password_hash',{length:256}).notNull(),
     createdAt:timestamp('created_at').notNull().defaultNow(),
-    updatedAt:timestamp('created_at').notNull().$onUpdateFn(()=>new Date()),
+    updatedAt:timestamp('updated_at').notNull().$onUpdateFn(()=>new Date()),
 })
 export const products = pgTable('products',{
     id:uuid('id').primaryKey().defaultRandom(),
