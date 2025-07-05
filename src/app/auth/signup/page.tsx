@@ -14,7 +14,6 @@ import { AiOutlineGoogle, AiOutlineLock, AiOutlineUser, AiOutlineEye, AiOutlineE
 
 import { signupAction } from './signUpAction'; // Import the server action
 
-// Define the initial state for the form, useful for useActionState
 const initialState = {
   message: '',
   success: false,
@@ -22,12 +21,10 @@ const initialState = {
 
 interface SignupFormInputs extends FieldValues {
   username: string;
-  // email: string; // Removed email
   phoneNumber: string;
   password: string;
 }
 
-// Component for the submit button to show loading state
 function SubmitButton() {
   const { pending } = useFormStatus();
 
@@ -48,7 +45,6 @@ export default function App() {
   const { control, handleSubmit, formState: { errors } } = useForm<SignupFormInputs>({
     defaultValues: {
       username: '',
-      // email: '', // Removed email
       phoneNumber: '',
       password: '',
     },
@@ -86,7 +82,7 @@ export default function App() {
                   render={({ field }) => (
                     <Input
                       id="username"
-                      placeholder="john.doe"
+                      placeholder="Abebe"
                       type="text"
                       className="pl-10 bg-gray-100 border-gray-200 placeholder-gray-500 focus:ring-blue-500 focus:border-blue-500"
                       {...field}
@@ -99,39 +95,8 @@ export default function App() {
               )}
             </div>
 
-            {/* Email input removed */}
-            {/* <div className="space-y-2">
-              <Label htmlFor="email" className="text-gray-600">Email</Label>
-              <div className="relative">
-                <AiOutlineMail className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-500 text-lg" />
-                <Controller<SignupFormInputs>
-                  name="email"
-                  control={control}
-                  rules={{
-                    required: 'Email is required',
-                    pattern: {
-                      value: /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$/,
-                      message: 'Invalid email address'
-                    }
-                  }}
-                  render={({ field }) => (
-                    <Input
-                      id="email"
-                      placeholder="john.doe@example.com"
-                      type="email"
-                      className="pl-10 bg-gray-100 border-gray-200 placeholder-gray-500 focus:ring-blue-500 focus:border-blue-500"
-                      {...field}
-                    />
-                  )}
-                />
-              </div>
-              {errors.email && (
-                <p className="text-red-500 text-sm mt-1">{errors.email.message}</p>
-              )}
-            </div>
-            */}
+            
 
-            {/* Phone Number Input */}
             <div className="space-y-2">
               <Label htmlFor="phoneNumber" className="text-gray-600">Phone Number</Label>
               <div className="relative">
@@ -142,7 +107,7 @@ export default function App() {
                   rules={{
                     required: 'Phone number is required',
                     pattern: {
-                      value: /^\d+$/, // Only digits
+                      value: /^\d+$/, 
                       message: 'Phone number must contain only digits'
                     },
                     minLength: { value: 10, message: 'Phone number must be at least 10 digits' } // Example min length

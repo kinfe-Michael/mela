@@ -9,11 +9,11 @@ import { verifyPassword } from "@/util/passwordHash";
 
     const user = await getUserPhoneNumber(phoneStripedOfCode)
     if (!user || !await verifyPassword(password, user.passwordHash)) {
-    return NextResponse.json({ message: 'Invalid credentials' }, { status: 401 });
+    return NextResponse.json({isLogeIn:false,user:null, message: 'Invalid credentials' }, { status: 401 });
   }
   const secret = process.env.JWT_SECRET || 'your_super_secret_key_please_change_this_in_production';
-  const token = jwt.sign({ userId: user.id, userName: user.userName }, secret, { expiresIn: '1h' });
-    const response = NextResponse.json({ message: 'Logged in successfully' });
+  const token = jwt.sign({ userId: user.id, username: user.userName }, secret, { expiresIn: '1h' });
+    const response = NextResponse.json({isLoggedIn: true, user: {userId:user.id,username:user.userName}, message: 'Logged in successfully' });
   response.cookies.set('auth_token', token, {
     httpOnly: true,
     secure: process.env.NODE_ENV === 'production',

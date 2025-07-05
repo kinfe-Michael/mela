@@ -5,48 +5,47 @@ import { useForm, Controller } from 'react-hook-form';
 import type { FieldValues } from 'react-hook-form';
 import { useRouter } from 'next/navigation'; // Import useRouter
 
-// Assuming these components are available from your shadcn/ui setup
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Button } from '@/components/ui/button';
 
-// Icons from react-icons/ai
 import { AiOutlineGoogle, AiOutlineLock, AiOutlineUser, AiOutlineEye, AiOutlineEyeInvisible, AiOutlinePhone } from 'react-icons/ai';
+import { useAuthStore } from '@/lib/authStore';
 
 
 interface LoginFormInputs extends FieldValues {
-  phoneNumber: string; // Changed from username to phoneNumber
+  phoneNumber: string; 
   password: string;
 }
 
 export default function App() {
   const [message, setMessage] = useState<string | null>(null);
   const [showPassword, setShowPassword] = useState<boolean>(false);
-  const [loading, setLoading] = useState<boolean>(false); // State for loading indicator
-  const router = useRouter(); // Initialize useRouter
-
+  const [loading, setLoading] = useState<boolean>(false); 
+  const router = useRouter(); 
+  const setAuthStatus = useAuthStore((state)=> state.setAuthStatus)
   const { control, handleSubmit, formState: { errors } } = useForm<LoginFormInputs>({
     defaultValues: {
-      phoneNumber: '', // Changed from username to phoneNumber
+      phoneNumber: '', 
       password: '',
     },
   });
 
   const onSubmit = async (data: LoginFormInputs) => {
-    setMessage(null); // Clear previous messages
-    setLoading(true); // Set loading to true
+    setMessage(null); 
+    setLoading(true); 
     console.log('Login Data:', data);
 
     try {
-      const response = await fetch('/api/login', {
+      const response = await fetch('/api/auth/login', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({
-          phoneNumber: data.phoneNumber, // Send phone number
-          password: data.password,       // Send password
+          phoneNumber: data.phoneNumber, 
+          password: data.password,       
         }),
       });
 
@@ -54,7 +53,8 @@ export default function App() {
 
       if (response.ok) {
         setMessage('Login successful! Redirecting...');
-        // Handle successful login, e.g., redirect to dashboard
+        setAuthStatus(result.isLoggedIn,result.user)
+        
         router.push('/'); 
       } else {
         setMessage(result.message || 'Login failed. Please check your credentials.');
@@ -63,14 +63,13 @@ export default function App() {
       console.error('Login error:', error);
       setMessage('An error occurred during login. Please try again.');
     } finally {
-      setLoading(false); // Set loading to false regardless of success or failure
+      setLoading(false); 
     }
   };
 
   const handleGoogleLogin = () => {
     console.log('Logging in with Google...');
     setMessage('Redirecting to Google for login...');
-    // In a real application, you would trigger Google OAuth flow here
   };
 
   const togglePasswordVisibility = () => {
@@ -97,16 +96,13 @@ export default function App() {
                   control={control}
                   rules={{
                     required: 'Phone number is required',
-                    // pattern: {
-                    //   value: /^\?[1-9]\d{1,14}$/, // E.164 format regex (basic)
-                    //   message: 'Invalid phone number format (e.g., +1234567890)',
-                    // },
+                  
                   }}
                   render={({ field }) => (
                     <Input
                       id="phoneNumber"
-                      placeholder="+251912345678"
-                      type="tel" // Use type="tel" for phone numbers
+                      placeholder="0918101212"
+                      type="tel" 
                       className="pl-10 bg-gray-100 border-gray-300 rounded-md placeholder-gray-500 focus:ring-blue-500 focus:border-blue-500"
                       {...field}
                     />
