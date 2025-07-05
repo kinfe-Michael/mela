@@ -9,7 +9,9 @@ import { SearchResultsOverlay } from "./SearchResultsOverlay";
 import useWashintStore from "@/store/useWashintStore";
 import { openSearchBar,closeSearchBar } from "@/lib/searchStateOperation";
 import Link from "next/link";
+import { useAuthStore } from "@/lib/authStore";
 function Header() {
+  const {isLoading,isLoggedIn,logout} = useAuthStore((state)=> state)
   const [showSearchResults, setShowSearchResults] = useState<boolean>(false); 
   const [searchTerm, setSearchTerm] = useState<string>(""); 
   const searchInputRef = useRef<HTMLInputElement>(null); 
@@ -81,9 +83,11 @@ function Header() {
         <Link href={"/"} className="px-2 text-xs hidden md:block font-bold bg-transparent shadow-none hover:bg-gray-200 text-black ">products</Link >
         <Link href={"/orders"} className="px-2 text-xs hidden md:block font-bold bg-transparent shadow-none hover:bg-gray-200 text-black ">order</Link >
         <Link href={"/cart"} className="px-2 text-xs hidden md:block font-bold bg-transparent shadow-none hover:bg-gray-200 text-black ">cart</Link>
+        {!isLoggedIn && <Link href={"/auth/login"}>
         <Button className="bg-[#FF3B30] text-xs px-3 hover:bg-[#ff3a30d8] font-bold">
-          Sign up
+         Login
         </Button>
+        </Link>}
         <PhoneSidebar />
       </div>
     </header>

@@ -1,4 +1,5 @@
-import React from "react";
+"use client"
+import React, { useState } from "react";
 import { HiViewList } from "react-icons/hi";
 import {
   Sheet,
@@ -11,10 +12,14 @@ import {
 import SidebarContent from "./SidebarContent";
 import Image from "next/image";
 import { Button } from "@/components/ui/button";
+import { useAuthStore } from "@/lib/authStore";
+import Link from "next/link";
 function PhoneSidebar() {
+  const [isSheetOpen, setIsSheetOpen] = useState(false);
+  const {isLoading,isLoggedIn,logout} = useAuthStore((state)=>state)
   return (
-    <Sheet>
-      <SheetTrigger>
+    <Sheet open={isSheetOpen}>
+      <SheetTrigger onClick={()=>setIsSheetOpen(true)}>
         <HiViewList className="lg:hidden  text-2xl" />
       </SheetTrigger>
 
@@ -34,12 +39,24 @@ function PhoneSidebar() {
           </div>
        
         <SidebarContent />
-         <Button className=" px-2 text-xs bg-white text-black border mx-4 border-gray-300  md:block font-bold">
+        {!isLoggedIn &&<Link onClick={()=> setIsSheetOpen(false)} href={"/auth/login"} className="p-2 rounded-md text-center  px-2 text-xs bg-white text-black border mx-4 border-gray-300  md:block font-bold">
             Login
-          </Button>
-          <Button className="bg-green-500 text-sm mx-4   px-1 hover:bg-green-700 font-bold">
+          </Link>
+          }
+          {
+            !isLoggedIn && 
+            <Link onClick={()=> setIsSheetOpen(false)} href={"/auth/signup"} className="p-2 rounded-md text-center text-white bg-green-500 text-sm mx-4   px-1 hover:bg-green-700 font-bold">
             Sign up
+          </Link>
+          }
+          {
+            isLoggedIn && <Button onClick={()=>{
+              logout()
+              setIsSheetOpen(false)
+            }} className="bg-green-500 text-sm mx-4   px-1 hover:bg-green-700 font-bold">
+            Log out
           </Button>
+          }
       </SheetContent>
     </Sheet>
   );
