@@ -29,6 +29,11 @@ export async function getUserById(userId: string) {
     where: eq(users.id, userId),
   });
 }
+export async function getUserPhoneNumber(phoneNumber: number) {
+  return db.query.users.findFirst({
+    where: eq(users.phoneNumber, phoneNumber),
+  });
+}
 
 export async function getUserByUserName(userName: string) {
   return db.query.users.findFirst({
