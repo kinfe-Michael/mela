@@ -1,50 +1,72 @@
-"use client"; 
+"use client";
 import React, { useState } from 'react';
 import { useForm, Controller } from 'react-hook-form';
 import type { FieldValues } from 'react-hook-form';
+import { useFormStatus } from 'react-dom';
+import { useActionState } from 'react';
 
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Button } from '@/components/ui/button';
 
-import { AiOutlineGoogle, AiOutlineLock, AiOutlineUser, AiOutlineMail, AiOutlineEye, AiOutlineEyeInvisible } from 'react-icons/ai';
+import { AiOutlineGoogle, AiOutlineLock, AiOutlineUser, AiOutlineEye, AiOutlineEyeInvisible, AiOutlinePhone } from 'react-icons/ai'; // Removed AiOutlineMail
+
+import { signupAction } from './signUpAction'; // Import the server action
+
+// Define the initial state for the form, useful for useActionState
+const initialState = {
+  message: '',
+  success: false,
+};
 
 interface SignupFormInputs extends FieldValues {
   username: string;
-  email: string;
+  // email: string; // Removed email
+  phoneNumber: string;
   password: string;
 }
 
+// Component for the submit button to show loading state
+function SubmitButton() {
+  const { pending } = useFormStatus();
+
+  return (
+    <Button
+      type="submit"
+      aria-disabled={pending}
+      className="w-full bg-[#FF3B30] hover:bg-[#ff3a30d8] text-white font-semibold py-2 rounded-md transition-colors duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
+    >
+      {pending ? 'Signing Up...' : 'Sign Up'}
+    </Button>
+  );
+}
+
 export default function App() {
-  const [message, setMessage] = useState<string | null>(null);
   const [showPassword, setShowPassword] = useState<boolean>(false);
 
   const { control, handleSubmit, formState: { errors } } = useForm<SignupFormInputs>({
     defaultValues: {
       username: '',
-      email: '',
+      // email: '', // Removed email
+      phoneNumber: '',
       password: '',
     },
   });
 
-  const onSubmit = (data: SignupFormInputs) => {
-    console.log('Signup Data:', data);
-    setMessage(`Attempting to sign up with username: ${data.username}, email: ${data.email}, and password: ${data.password}`);
-  };
-
   const handleGoogleSignup = () => {
     console.log('Signing up with Google...');
-    setMessage('Redirecting to Google for signup...');
   };
 
   const togglePasswordVisibility = () => {
-    setShowPassword((prev) => !prev); 
+    setShowPassword((prev) => !prev);
   };
+
+  const [state, formAction] = useActionState(signupAction, initialState);
 
   return (
     <div className="min-h-screen mt-16 bg- flex items-center justify-center p-4 sm:p-6 md:p-8">
-      <Card className="w-full max-w-sm bg-gray-100  rounded-xl shadow-lg border-gray-200">
+      <Card className="w-full max-w-sm bg-gray-100 rounded-xl shadow-lg border-gray-200">
         <CardHeader className="text-center">
           <CardTitle className="text-3xl font-bold ">Create an Account</CardTitle>
           <CardDescription className="text-gray-400">
@@ -52,7 +74,7 @@ export default function App() {
           </CardDescription>
         </CardHeader>
         <CardContent>
-          <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
+          <form action={formAction} className="space-y-6">
             <div className="space-y-2">
               <Label htmlFor="username" className="text-gray-600">Username</Label>
               <div className="relative">
@@ -66,7 +88,7 @@ export default function App() {
                       id="username"
                       placeholder="john.doe"
                       type="text"
-                      className="pl-10 bg-gray-100 border-gray-200  placeholder-gray-500 focus:ring-blue-500 focus:border-blue-500"
+                      className="pl-10 bg-gray-100 border-gray-200 placeholder-gray-500 focus:ring-blue-500 focus:border-blue-500"
                       {...field}
                     />
                   )}
@@ -77,8 +99,9 @@ export default function App() {
               )}
             </div>
 
-            <div className="space-y-2">
-              <Label htmlFor="email" className="text-gray-300">Email</Label>
+            {/* Email input removed */}
+            {/* <div className="space-y-2">
+              <Label htmlFor="email" className="text-gray-600">Email</Label>
               <div className="relative">
                 <AiOutlineMail className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-500 text-lg" />
                 <Controller<SignupFormInputs>
@@ -96,7 +119,7 @@ export default function App() {
                       id="email"
                       placeholder="john.doe@example.com"
                       type="email"
-                      className="pl-10 bg-gray-100 border-gray-200  placeholder-gray-500 focus:ring-blue-500 focus:border-blue-500"
+                      className="pl-10 bg-gray-100 border-gray-200 placeholder-gray-500 focus:ring-blue-500 focus:border-blue-500"
                       {...field}
                     />
                   )}
@@ -106,9 +129,42 @@ export default function App() {
                 <p className="text-red-500 text-sm mt-1">{errors.email.message}</p>
               )}
             </div>
+            */}
+
+            {/* Phone Number Input */}
+            <div className="space-y-2">
+              <Label htmlFor="phoneNumber" className="text-gray-600">Phone Number</Label>
+              <div className="relative">
+                <AiOutlinePhone className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-500 text-lg" />
+                <Controller<SignupFormInputs>
+                  name="phoneNumber"
+                  control={control}
+                  rules={{
+                    required: 'Phone number is required',
+                    pattern: {
+                      value: /^\d+$/, // Only digits
+                      message: 'Phone number must contain only digits'
+                    },
+                    minLength: { value: 10, message: 'Phone number must be at least 10 digits' } // Example min length
+                  }}
+                  render={({ field }) => (
+                    <Input
+                      id="phoneNumber"
+                      placeholder="e.g., 251912345678"
+                      type="tel"
+                      className="pl-10 bg-gray-100 border-gray-200 placeholder-gray-500 focus:ring-blue-500 focus:border-blue-500"
+                      {...field}
+                    />
+                  )}
+                />
+              </div>
+              {errors.phoneNumber && (
+                <p className="text-red-500 text-sm mt-1">{errors.phoneNumber.message}</p>
+              )}
+            </div>
 
             <div className="space-y-2">
-              <Label htmlFor="password" className="text-gray-300">Password</Label>
+              <Label htmlFor="password" className="text-gray-600">Password</Label>
               <div className="relative">
                 <AiOutlineLock className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-500 text-lg" />
                 <Controller<SignupFormInputs>
@@ -120,7 +176,7 @@ export default function App() {
                       id="password"
                       placeholder="••••••••"
                       type={showPassword ? "text" : "password"}
-                      className="pl-10 pr-10 bg-gray-100 border-gray-200  placeholder-gray-500 focus:ring-blue-500 focus:border-blue-500"
+                      className="pl-10 pr-10 bg-gray-100 border-gray-200 placeholder-gray-500 focus:ring-blue-500 focus:border-blue-500"
                       {...field}
                     />
                   )}
@@ -143,30 +199,27 @@ export default function App() {
               )}
             </div>
 
-
-            <Button
-              type="submit"
-              className="w-full bg-[#FF3B30] hover:bg-[#ff3a30d8] text-white font-semibold py-2 rounded-md transition-colors duration-200"
-            >
-              Sign Up
-            </Button>
+            <SubmitButton />
           </form>
 
-          {message && (
-            <p className="text-center text-sm mt-4 text-green-400">
-              {message}
+          {state.message && (
+            <p
+              className={`text-center text-sm mt-4 p-2 rounded-md ${
+                state.success ? 'bg-green-100 text-green-700' : 'bg-red-100 text-red-700'
+              }`}
+            >
+              {state.message}
             </p>
           )}
 
           <div className="relative flex items-center justify-center my-6">
-            
-            <div className="relative z-10 px-4  text-gray-800 text-sm">
+            <div className="relative z-10 px-4 text-gray-800 text-sm">
               OR
             </div>
           </div>
           <Button
             variant="outline"
-            className="w-full flex items-center justify-center gap-2 bg-gray-100 border-gray-300  hover:bg-gray-700 font-bold py-2 rounded-md transition-colors duration-200"
+            className="w-full flex items-center justify-center gap-2 bg-gray-100 border-gray-300 hover:bg-gray-700 font-bold py-2 rounded-md transition-colors duration-200"
             onClick={handleGoogleSignup}
           >
             <AiOutlineGoogle className="text-lg" />
