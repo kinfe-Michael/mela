@@ -66,23 +66,36 @@ interface AddProductResult {
   product?: InferSelectModel<typeof products>; // The inferred select model for a product
   error?: string;
 }
+interface AddProductParams {
+  name: string;
+  description: string | null;
+  price: string; // Keep as string for numeric type
+  quantity: number;
+  category: string; // Add category here
+  imageUrl: string | null;
+  sellerId: string;
+}
 
-export async function addProduct(
-  productData: Omit<InferInsertModel<typeof products>, 'id' | 'createdAt' | 'updatedAt'>
-): Promise<AddProductResult> {
+export async function addProduct(params: AddProductParams) {
   try {
-    const [newProduct] = await db.insert(products).values(productData).returning();
-    // If newProduct is null/undefined (though .returning() usually ensures it for successful inserts)
-    if (!newProduct) {
-      return { success: false, error: "Product insertion returned no data." };
-    }
+    const [newProduct] = await db.insert(products).values({
+      name: params.name,
+      description: params.description,
+      price: params.price,
+      quantity: params.quantity,
+      category: params.category as any, // Cast to any because Drizzle might expect a specific enum type
+      imageUrl: params.imageUrl,
+      sellerId: params.sellerId,
+    }).returning(); // .returning() is important to get the inserted product back
+
     return { success: true, product: newProduct };
   } catch (error: any) {
-    console.error("Error adding product:", error);
-    // Return an error message if the insertion fails
-    return { success: false, error: error.message || "Failed to add product due to an unknown error." };
+    console.error('Error adding product to DB:', error);
+    return { success: false, error: error.message || 'Database error occurred.' };
   }
 }
+
+
 
 export async function getProductById(productId: string) {
   return db.query.products.findFirst({

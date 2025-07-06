@@ -3,6 +3,7 @@ import PageWraper from '@/app/components/PageWraper';
 import { useFormStatus } from 'react-dom';
 import { useActionState } from 'react';
 import { createProductAction } from './createProductAction';
+import { productCategoryEnum } from '@/db/schema'; // Import your productCategoryEnum
 
 // Define the initial state for the form, useful for useActionState
 const initialState = {
@@ -27,6 +28,9 @@ function SubmitButton() {
 
 export default function AddProductPage() {
   const [state, formAction] = useActionState(createProductAction, initialState);
+
+  // Get the enum values for categories
+  const categories = productCategoryEnum.enumValues;
 
   return (
     <PageWraper>
@@ -97,6 +101,25 @@ export default function AddProductPage() {
               />
             </div>
 
+            {/* Category */}
+            <div>
+              <label htmlFor="category" className="block text-gray-700 text-sm font-medium mb-1">
+                Category <span className="text-red-500">*</span>
+              </label>
+              <select
+                id="category"
+                name="category"
+                required
+                className="w-full p-3 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500 transition-all duration-200"
+              >
+                {categories.map((category) => (
+                  <option key={category} value={category}>
+                    {category.replace(/_/g, ' ').replace(/\b\w/g, char => char.toUpperCase())}
+                  </option>
+                ))}
+              </select>
+            </div>
+
             {/* Image File Input */}
             <div>
               <label htmlFor="imageFile" className="block text-gray-700 text-sm font-medium mb-1">
@@ -108,13 +131,11 @@ export default function AddProductPage() {
                 name="imageFile"
                 accept="image/*"
                 className="w-full p-3 border border-gray-300 rounded-md file:mr-4 file:py-2 file:px-4
-                           file:rounded-md file:border-0 file:text-sm file:font-semibold
-                           file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100
-                           transition-all duration-200 cursor-pointer"
+                               file:rounded-md file:border-0 file:text-sm file:font-semibold
+                               file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100
+                               transition-all duration-200 cursor-pointer"
               />
             </div>
-
-            {/* Seller ID input removed - will be handled automatically on the server */}
 
             {/* Display messages based on form state */}
             {state.message && (

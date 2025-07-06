@@ -3,6 +3,20 @@ import { relations } from "drizzle-orm"
 
 export const orderStatusEnum = pgEnum('order_status',['pending','completed', 'shipped', 'cancelled'])
 
+// New: Product Category Enum
+export const productCategoryEnum = pgEnum('product_category', [
+  'electronics',
+  'books',
+  'clothing',
+  'home_decor',
+  'sports',
+  'food',
+  'toys',
+  'automotive',
+  'health_beauty',
+  'other',
+]);
+
 export const users = pgTable('users',{
     id:uuid('id').primaryKey().defaultRandom(),
     userName:varchar('user_name',{length:256}).notNull().unique(),
@@ -11,6 +25,7 @@ export const users = pgTable('users',{
     createdAt:timestamp('created_at').notNull().defaultNow(),
     updatedAt:timestamp('updated_at').notNull().$onUpdateFn(()=>new Date()),
 })
+
 export const products = pgTable('products',{
     id:uuid('id').primaryKey().defaultRandom(),
     sellerId: uuid('seller_id').notNull().references(() => users.id, { onDelete: 'cascade' }),
@@ -19,8 +34,10 @@ export const products = pgTable('products',{
     price:numeric('price',{precision:10,scale:2}).notNull(),
     quantity:integer('quantity').notNull().default(0),
     imageUrl:varchar('image_url',{length:512}),
-      createdAt: timestamp('created_at').notNull().defaultNow(),
-  updatedAt: timestamp('updated_at').notNull().defaultNow().$onUpdateFn(() => new Date()),
+    // New: Category field for products
+    category: productCategoryEnum('category').notNull().default('other'),
+    createdAt: timestamp('created_at').notNull().defaultNow(),
+    updatedAt: timestamp('updated_at').notNull().defaultNow().$onUpdateFn(() => new Date()),
 })
 
 export const orders = pgTable('orders',{
@@ -67,7 +84,7 @@ export const orderItemRelations = relations(orderItems,({one})=>({
         fields:[orderItems.orderId],
         references:[orders.id]
     }),
-      product: one(products, { // This is the new part
+    product: one(products, {
         fields: [orderItems.productId],
         references: [products.id]
     })
