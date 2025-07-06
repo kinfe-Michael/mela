@@ -1,9 +1,8 @@
-// pages/orders/index.tsx
 "use client";
 
-import React, { useState } from 'react'; // Import useState
+import React, { useState } from 'react'; 
+import PageWraper from '../components/PageWraper';
 
-// Define interfaces directly in this file for self-containment
 interface OrderItem {
   productId: string;
   name: string;
@@ -14,17 +13,16 @@ interface OrderItem {
 
 interface Order {
   id: string;
-  orderDate: string; // e.g., "2023-10-26"
+  orderDate: string; 
   totalAmount: number;
   status: 'Pending' | 'Processing' | 'Shipped' | 'Delivered' | 'Cancelled';
   items: OrderItem[];
 }
 
-// Hardcoded mock data for user's past orders
 const staticOrders: Order[] = [
   {
     id: 'ORD-2023-001',
-    orderDate: '2023-10-20',
+    orderDate: '2023-10-20', 
     totalAmount: 125.49,
     status: 'Delivered',
     items: [
@@ -63,20 +61,18 @@ const staticOrders: Order[] = [
 ];
 
 const StaticOrdersPage: React.FC = () => {
-  // State to manage which order cards are expanded/collapsed
-  // Map order ID to a boolean (true for expanded, false for collapsed)
   const [expandedOrders, setExpandedOrders] = useState<Record<string, boolean>>({});
 
-  // Function to toggle the expanded state of an order
   const toggleExpand = (orderId: string) => {
     setExpandedOrders(prevState => ({
       ...prevState,
-      [orderId]: !prevState[orderId] // Toggle the boolean value for the given orderId
+      [orderId]: !prevState[orderId] 
     }));
   };
 
   return (
-    <div className="min-h-screen bg-gray-100 py-8 px-4 sm:px-6 lg:px-8">
+    <PageWraper>
+<div className="min-h-screen bg-gray-100 py-8 px-4 sm:px-6 lg:px-8">
       <div className="container mx-auto max-w-3xl">
         <h1 className="text-3xl font-extrabold text-gray-900 text-center mb-8">My Orders</h1>
 
@@ -109,7 +105,6 @@ const StaticOrdersPage: React.FC = () => {
                     >
                       {order.status}
                     </span>
-                    {/* Collapse/Expand Icon */}
                     <svg
                       xmlns="http://www.w3.org/2000/svg"
                       className={`h-6 w-6 text-gray-500 transform transition-transform duration-200 ${expandedOrders[order.id] ? 'rotate-180' : ''}`}
@@ -123,7 +118,6 @@ const StaticOrdersPage: React.FC = () => {
                   </div>
                 </div>
 
-                {/* Conditionally render items based on expandedOrders state */}
                 {expandedOrders[order.id] && (
                   <div className="mb-4">
                     <h3 className="text-lg font-semibold text-gray-800 mb-2">Items:</h3>
@@ -158,6 +152,8 @@ const StaticOrdersPage: React.FC = () => {
         )}
       </div>
     </div>
+    </PageWraper>
+    
   );
 };
 

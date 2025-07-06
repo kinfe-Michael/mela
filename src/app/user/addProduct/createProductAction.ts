@@ -1,9 +1,12 @@
 'use server';
 
-import { addProduct } from '@/util/dbUtil';
+import { addProduct } from '@/util/dbUtil'; // Assuming this function exists and is correctly defined
 import { S3Client, PutObjectCommand } from '@aws-sdk/client-s3';
 import { v4 as uuidv4 } from 'uuid';
 import path from 'path';
+
+// Import productCategoryEnum for validation if needed, or just rely on form input.
+// import { productCategoryEnum } from '@/drizzle/schema'; 
 
 // Initialize S3 Client
 const s3Client = new S3Client({
@@ -24,30 +27,40 @@ export async function createProductAction(prevState: typeof initialState, formDa
   const description = formData.get('description') as string;
   const price = parseFloat(formData.get('price') as string);
   const quantity = parseInt(formData.get('quantity') as string, 10);
+  const category = formData.get('category') as string; // Get the category
   const imageFile = formData.get('imageFile') as File;
 
-  // --- AUTOMATIC SELLER ID HANDLING ---
-  // In a real application, you would get the sellerId from the authenticated user's session.
-  // For example, if you're using NextAuth.js, you might do:
-  // const session = await getServerSession(authOptions);
-  // if (!session || !session.user || !session.user.id) {
-  //   return { success: false, message: 'Authentication required to add a product.' };
-  // }
-  // const sellerId = session.user.id;
+  // --- Seller ID Handling using internal API call ---
+  let sellerId: string | null = null;
+  try {
+    const authStatusResponse = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/api/auth/status`, {
+        cache: 'no-store' // Ensure we get the latest auth status
+    });
+    const authData = await authStatusResponse.json();
 
-  // For demonstration, we'll use a static placeholder UUID.
-  // Make sure this UUID actually exists in your 'users' table for the product to be valid.
-  const sellerId = 'a1b2c3d4-e5f6-7890-1234-567890abcdef'; // REPLACE WITH A VALID UUID FROM YOUR 'users' TABLE FOR TESTING
-  // --- END AUTOMATIC SELLER ID HANDLING ---
+    if (authStatusResponse.ok && authData.isLoggedIn && authData.user && authData.user.userId) {
+      sellerId = authData.user.userId;
+    } else {
+      return { success: false, message: 'Authentication required to add a product.' };
+    }
+  } catch (error) {
+    console.error('Error fetching auth status in server action:', error);
+    return { success: false, message: 'Failed to verify authentication status.' };
+  }
+  // --- END Seller ID Handling ---
 
-
-  // Basic server-side validation (sellerId check removed as it's now internal)
-  if (!name || !price || isNaN(price) || !quantity || isNaN(quantity)) {
-    return { success: false, message: 'Please fill in all required fields (Name, Price, Quantity).' };
+  // Basic server-side validation
+  if (!name || !price || isNaN(price) || !quantity || isNaN(quantity) || !category || !sellerId) {
+    return { success: false, message: 'Please fill in all required fields (Name, Price, Quantity, Category) and ensure you are logged in.' };
   }
   if (price <= 0 || quantity < 0) {
     return { success: false, message: 'Price must be positive, and Quantity cannot be negative.' };
   }
+
+  // Optional: Validate if the category is one of the allowed enum values
+  // if (!productCategoryEnum.enumValues.includes(category as any)) {
+  //   return { success: false, message: 'Invalid product category selected.' };
+  // }
 
   let imageUrl: string | null = null;
 
@@ -82,8 +95,9 @@ export async function createProductAction(prevState: typeof initialState, formDa
       description: description || null,
       price: price.toString(),
       quantity,
+      category: category, // Pass the category
       imageUrl: imageUrl,
-      sellerId, // Now sellerId comes from the server-side logic
+      sellerId, // Now sellerId comes from the internal auth check
     });
 
     if (result.success) {
