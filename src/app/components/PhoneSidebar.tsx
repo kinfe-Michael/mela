@@ -18,8 +18,8 @@ function PhoneSidebar() {
   const [isSheetOpen, setIsSheetOpen] = useState(false);
   const {isLoading,isLoggedIn,logout} = useAuthStore((state)=>state)
   return (
-    <Sheet open={isSheetOpen}>
-      <SheetTrigger onClick={()=>setIsSheetOpen(true)}>
+    <Sheet onOpenChange={setIsSheetOpen} open={isSheetOpen}>
+      <SheetTrigger asChild>
         <HiViewList className="lg:hidden  text-2xl" />
       </SheetTrigger>
 
