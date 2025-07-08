@@ -11,7 +11,11 @@ interface JwtPayload {
 
 export async function GET(req: Request) {
   const cookieStore = await cookies();
+  console.log(cookieStore)
   const token = cookieStore.get('auth_token')?.value;
+  console.log("token")
+  console.log(token)
+  console.log("token")
 
   const secret = process.env.JWT_SECRET;
 

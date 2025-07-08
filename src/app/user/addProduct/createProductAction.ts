@@ -1,9 +1,9 @@
 'use server';
-
 import { addProduct } from '@/util/dbUtil'; // Assuming this function exists and is correctly defined
 import { S3Client, PutObjectCommand } from '@aws-sdk/client-s3';
 import { v4 as uuidv4 } from 'uuid';
 import path from 'path';
+import { useAuthStore } from '@/lib/authStore';
 
 // Import productCategoryEnum for validation if needed, or just rely on form input.
 // import { productCategoryEnum } from '@/drizzle/schema'; 
@@ -16,7 +16,7 @@ const s3Client = new S3Client({
     secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY as string,
   },
 });
-
+console.log(process.env.NEXT_PUBLIC_BASE_URL)
 const initialState = {
   message: '',
   success: false,
@@ -29,14 +29,23 @@ export async function createProductAction(prevState: typeof initialState, formDa
   const quantity = parseInt(formData.get('quantity') as string, 10);
   const category = formData.get('category') as string; // Get the category
   const imageFile = formData.get('imageFile') as File;
+  // const checkAuthStatus = useAuthStore((state)=>state.checkAuthStatus)
 
   // --- Seller ID Handling using internal API call ---
   let sellerId: string | null = null;
   try {
-    const authStatusResponse = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/api/auth/status`, {
-        cache: 'no-store' // Ensure we get the latest auth status
-    });
+    
+    // const authStatusResponse = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/api/auth/status`);
+    const authStatusResponse = await fetch(`http://localhost:3000/api/auth/status`);
+    console.log("authStatusResponse")
+    console.log(authStatusResponse)
+    console.log("authStatusResponse")
+    
     const authData = await authStatusResponse.json();
+    console.log("authData")
+    console.log(authData)
+    console.log("authData")
+
 
     if (authStatusResponse.ok && authData.isLoggedIn && authData.user && authData.user.userId) {
       sellerId = authData.user.userId;
