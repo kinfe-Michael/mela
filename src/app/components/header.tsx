@@ -79,15 +79,21 @@ function Header() {
       </div>
       <div className="flex flex-grow items-center justify-end gap-2">
         
+        <Link href={"/user/addProduct"} className="px-2 text-xs hidden md:block font-bold bg-transparent shadow-none hover:bg-gray-200 text-black ">My products</Link >
         <Link href={"/category"} className="px-2 text-xs hidden md:block font-bold bg-transparent shadow-none hover:bg-gray-200 text-black ">Catagory</Link >
         <Link href={"/"} className="px-2 text-xs hidden md:block font-bold bg-transparent shadow-none hover:bg-gray-200 text-black ">products</Link >
         <Link href={"/orders"} className="px-2 text-xs hidden md:block font-bold bg-transparent shadow-none hover:bg-gray-200 text-black ">order</Link >
         <Link href={"/cart"} className="px-2 text-xs hidden md:block font-bold bg-transparent shadow-none hover:bg-gray-200 text-black ">cart</Link>
-        {!isLoggedIn && <Link href={"/auth/login"}>
+        {!isLoggedIn && <Link  className="md:hidden" href={"/auth/login"}>
         <Button className="bg-[#FF3B30] text-xs px-3 hover:bg-[#ff3a30d8] font-bold">
          Login
         </Button>
         </Link>}
+         {isLoggedIn && 
+        <Button onClick={logout} className="bg-gray-200 md:hidden text-xs text-black px-3 hover:bg-gray-50 font-bold">
+         Logout
+        </Button>
+       }
         <PhoneSidebar />
       </div>
     </header>

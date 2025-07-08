@@ -1,19 +1,20 @@
 "use client"
 import PageWraper from '@/app/components/PageWraper';
-import { useFormStatus } from 'react-dom';
-import { useActionState } from 'react';
-import { createProductAction } from './createProductAction';
-import { productCategoryEnum } from '@/db/schema'; // Import your productCategoryEnum
-
-// Define the initial state for the form, useful for useActionState
-const initialState = {
-  message: '',
-  success: false,
-};
+import { useState, useEffect } from 'react'; // Import useState and useEffect
+import { productCategoryEnum } from '@/db/schema';
+import { useAuthStore } from '@/lib/authStore';
 
 // Component for the submit button to show loading state
-function SubmitButton() {
-  const { pending } = useFormStatus();
+interface SubmitButtonProps {
+  pending: boolean;
+}
+
+function SubmitButton({ pending }: SubmitButtonProps) {
+  const checkAuthStatus = useAuthStore((state) => state.checkAuthStatus);
+
+  useEffect(() => {
+    checkAuthStatus();
+  }, [checkAuthStatus]); // Add checkAuthStatus to dependency array
 
   return (
     <button
@@ -27,10 +28,49 @@ function SubmitButton() {
 }
 
 export default function AddProductPage() {
-  const [state, formAction] = useActionState(createProductAction, initialState);
+  const [message, setMessage] = useState('');
+  const [success, setSuccess] = useState(false);
+  const [pending, setPending] = useState(false); // State to manage loading status
 
   // Get the enum values for categories
   const categories = productCategoryEnum.enumValues;
+
+  const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+    setPending(true); // Set loading state
+    setMessage(''); // Clear previous messages
+    setSuccess(false);
+
+    const formData = new FormData(event.currentTarget);
+
+    try {
+      // Make sure the API route path is correct.
+      // If you are using App Router, it's typically /api/createProduct
+      // If you are using Pages Router, it's typically /api/createProduct
+      const response = await fetch('/api/product/createProduct', {
+        method: 'POST',
+        body: formData, // FormData directly handles file uploads to API routes
+      });
+
+      const data = await response.json();
+
+      if (response.ok) {
+        setSuccess(true);
+        setMessage(data.message || 'Product added successfully!');
+        // Optionally, clear the form after successful submission
+        event.currentTarget.reset();
+      } else {
+        setSuccess(false);
+        setMessage(data.message || 'Failed to add product. Please try again.');
+      }
+    } catch (error: any) {
+      console.error('Network or unexpected error:', error);
+      setSuccess(false);
+      setMessage(error.message || 'An unexpected error occurred. Please check your network connection.');
+    } finally {
+      setPending(false); // Reset loading state
+    }
+  };
 
   return (
     <PageWraper>
@@ -38,7 +78,7 @@ export default function AddProductPage() {
         <div className="bg-white p-6 sm:p-8 rounded-xl shadow-lg w-full max-w-md border border-gray-200">
           <h1 className="text-3xl font-bold text-gray-800 mb-6 text-center">Add New Product</h1>
 
-          <form action={formAction} className="space-y-5" encType="multipart/form-data">
+          <form onSubmit={handleSubmit} className="space-y-5" encType="multipart/form-data">
             {/* Name */}
             <div>
               <label htmlFor="name" className="block text-gray-700 text-sm font-medium mb-1">
@@ -138,17 +178,17 @@ export default function AddProductPage() {
             </div>
 
             {/* Display messages based on form state */}
-            {state.message && (
+            {message && (
               <p
                 className={`text-center p-3 rounded-md ${
-                  state.success ? 'bg-green-100 text-green-700' : 'bg-red-100 text-red-700'
+                  success ? 'bg-green-100 text-green-700' : 'bg-red-100 text-red-700'
                 } text-sm font-medium`}
               >
-                {state.message}
+                {message}
               </p>
             )}
 
-            <SubmitButton />
+            <SubmitButton pending={pending} />
           </form>
         </div>
       </div>

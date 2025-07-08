@@ -46,6 +46,10 @@ function SidebarContent() {
           <HiSun />
           Catagory
         </SideBarButtons>
+          <SideBarButtons>
+          <HiSun />
+          My products
+        </SideBarButtons>
         <SideBarButtons>
           <HiCheckCircle />
           Products
