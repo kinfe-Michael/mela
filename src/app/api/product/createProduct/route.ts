@@ -1,13 +1,11 @@
-// app/api/createProduct/route.ts
 
 import { addProduct } from '@/util/dbUtil';
 import { S3Client, PutObjectCommand } from '@aws-sdk/client-s3';
 import { v4 as uuidv4 } from 'uuid';
 import path from 'path';
 import { NextRequest, NextResponse } from 'next/server';
-import jwt from 'jsonwebtoken'; // Import jsonwebtoken directly
+import jwt from 'jsonwebtoken'; 
 
-// Initialize S3 Client
 const s3Client = new S3Client({
   region: process.env.AWS_S3_REGION,
   credentials: {
@@ -16,26 +14,21 @@ const s3Client = new S3Client({
   },
 });
 
-// Define your JWT secret key
-// IMPORTANT: Ensure process.env.JWT_SECRET is set in your .env.local and deployment environment
-const JWT_SECRET = process.env.JWT_SECRET || 'your_super_secret_jwt_key'; // **CHANGE THIS IN PRODUCTION AND MAKE IT LONG/RANDOM**
+const JWT_SECRET = process.env.JWT_SECRET || 'your_super_secret_jwt_key'; 
 
 export async function POST(req: NextRequest) {
   let sellerId: string | null = null;
 
-  // --- Authentication directly from cookies using jsonwebtoken ---
   try {
-    // Access cookies using NextRequest's .cookies API
     const authToken = req.cookies.get('auth_token')?.value;
 
     if (!authToken) {
       return NextResponse.json({ success: false, message: 'Authentication required: Auth token not found.' }, { status: 401 });
     }
 
-    // Verify the JWT token using jsonwebtoken
     const decoded = jwt.verify(authToken, JWT_SECRET) as { userId: string; [key: string]: any }; // Adjust payload type as needed
 
-    sellerId = decoded.userId; // Assuming your JWT payload has a 'userId' field
+    sellerId = decoded.userId; 
 
     if (!sellerId) {
       return NextResponse.json({ success: false, message: 'Authentication required: User ID not found in token payload.' }, { status: 401 });
@@ -48,10 +41,9 @@ export async function POST(req: NextRequest) {
     }
     return NextResponse.json({ success: false, message: 'Failed to verify authentication status.' }, { status: 500 });
   }
-  // --- END Authentication ---
 
   try {
-    const formData = await req.formData(); // Handles multipart/form-data directly in App Router
+    const formData = await req.formData(); 
 
     const name = formData.get('name') as string;
     const description = formData.get('description') as string;
@@ -60,7 +52,6 @@ export async function POST(req: NextRequest) {
     const category = formData.get('category') as string;
     const imageFile = formData.get('imageFile') as File;
 
-    // Basic server-side validation
     if (!name || !price || isNaN(price) || !quantity || isNaN(quantity) || !category || !sellerId) {
       return NextResponse.json({ success: false, message: 'Please fill in all required fields (Name, Price, Quantity, Category) and ensure you are logged in.' }, { status: 400 });
     }

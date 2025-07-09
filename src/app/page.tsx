@@ -9,14 +9,15 @@ export default function Home() {
   return (
     <PageWraper>
       <Scroller title="favorite">
-       <ProductCard
+       {/* <ProductCard
        id="headphones"
           url="/yohana.jpg"
           alt="Awesome Item"
           productName="Awesome Collectible"
           price={75.00}
           
-        />
+        /> */}
+        <div></div>
       </Scroller>
     </PageWraper>
   );
