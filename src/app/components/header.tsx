@@ -79,7 +79,7 @@ function Header() {
       </div>
       <div className="flex flex-grow items-center justify-end gap-2">
         
-        <Link href={"/user/addProduct"} className="px-2 text-xs hidden md:block font-bold bg-transparent shadow-none hover:bg-gray-200 text-black ">My products</Link >
+        <Link href={"/user/products"} className="px-2 text-xs hidden md:block font-bold bg-transparent shadow-none hover:bg-gray-200 text-black ">My products</Link >
         <Link href={"/category"} className="px-2 text-xs hidden md:block font-bold bg-transparent shadow-none hover:bg-gray-200 text-black ">Catagory</Link >
         <Link href={"/"} className="px-2 text-xs hidden md:block font-bold bg-transparent shadow-none hover:bg-gray-200 text-black ">products</Link >
         <Link href={"/orders"} className="px-2 text-xs hidden md:block font-bold bg-transparent shadow-none hover:bg-gray-200 text-black ">order</Link >
