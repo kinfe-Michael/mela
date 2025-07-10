@@ -1,13 +1,11 @@
-// app/page.tsx
-// This is now a Server Component by default (no "use client")
 
 import PageWraper from '@/app/components/PageWraper';
 import { fetchAllProducts } from '@/app/actions/all-products'; // Import your Server Action
 import Link from 'next/link';
-import { Metadata } from 'next'; // For SEO metadata
+import { Metadata } from 'next'; 
 import AllProductsClientWrapper from '@/app/components/AllProductsClientWrapper'; // Import the new client wrapper
+import { searchProducts } from '@/util/dbUtil';
 
-// Define SEO metadata for this page
 export const metadata: Metadata = {
   title: 'Home - Your Marketplace',
   description: 'Browse a wide variety of products from different sellers. Find what you need!',
@@ -15,12 +13,10 @@ export const metadata: Metadata = {
 };
 
 export default async function HomePage() {
-  const PRODUCTS_PER_PAGE = 12; // Must match the client component and server action
+  const PRODUCTS_PER_PAGE = 12; 
 
-  // Fetch initial data directly on the server
   const { products: initialProducts, hasMore: initialHasMore, error } = await fetchAllProducts(0);
 
-  // Handle server-side errors before rendering client component
   if (error) {
     return (
       <PageWraper>
@@ -32,6 +28,10 @@ export default async function HomePage() {
     );
   }
 
+   
+ 
+
+
   return (
     <PageWraper>
       <div className="p-4 sm:p-6 lg:p-8 font-sans min-h-screen bg-gray-100">
@@ -42,7 +42,6 @@ export default async function HomePage() {
           </Link>
         </div>
 
-        {/* Pass the initial data to the Client Component for hydration and infinite scroll */}
         <AllProductsClientWrapper
           initialProducts={initialProducts}
           initialHasMore={initialHasMore}

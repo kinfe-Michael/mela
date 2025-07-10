@@ -1,6 +1,6 @@
 import { db } from './db'; 
 import { users, products, orders, orderItems, orderStatusEnum } from '../db/schema';
-import { eq,InferInsertModel,InferSelectModel } from 'drizzle-orm';
+import { eq,InferInsertModel,InferSelectModel, ilike,or } from 'drizzle-orm';
 import { hashPassword } from './passwordHash';
 
 
@@ -150,4 +150,19 @@ export async function deleteProduct(productId: string) {
     console.error("Error deleting product:", error);
     throw error;
   }
+}
+
+export async function searchProducts(searchTerm: string, options?: PaginationOptions) {
+  if (!searchTerm) {
+    return [];
+  }
+  return db.query.products.findMany({
+    where: or(
+      ilike(products.name, `%${searchTerm}%`),
+      ilike(products.description, `%${searchTerm}%`)
+    ),
+   
+    limit: options?.limit,
+    offset: options?.offset,
+  });
 }
