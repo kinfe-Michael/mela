@@ -3,37 +3,31 @@ import React from 'react';
 import Image from 'next/image'; // For optimized image loading
 import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area"; // Assuming these are valid components
 
-// Import the Product interface
-import { Product } from '@/types/Product'; // Adjust path based on where you put Product.ts
-
-// Mock product data for demonstration
-const mockProduct: Product = {
-  id: 'headphones',
-  name: 'Wireless Bluetooth Headphones',
-  price: 79.99,
-  description: 'Experience immersive audio with our premium wireless Bluetooth headphones. Featuring crystal-clear sound, comfortable over-ear design, and long-lasting battery life. Perfect for music lovers and professionals alike. Comes with noise-cancellation and a built-in microphone for calls. Available in black and silver.',
-  imageUrl: 'https://placehold.co/400x400/EEF2FF/3F20BA?text=Product+Image', // Placeholder image
-  category: 'Electronics',
-  brand: 'AudioTech',
-  inStock: true,
-  rating: 4.5,
-  reviewsCount: 128,
-};
+import { InferSelectModel } from 'drizzle-orm'; // Import for type safety
+import { products } from '@/db/schema'; // Import your Drizzle schema for 'products' type
 
 // Define the props interface for SingleProductDisplay
 interface SingleProductDisplayProps {
-  product?: Product; // product prop is optional and defaults to mockProduct
+  // The product prop is now typed directly from your Drizzle schema
+  product: InferSelectModel<typeof products>;
 }
 
-const SingleProductDisplay: React.FC<SingleProductDisplayProps> = ({ product = mockProduct }) => {
+const SingleProductDisplay: React.FC<SingleProductDisplayProps> = ({ product }) => {
+  // Ensure product.price is treated as a number for toFixed, as it's 'numeric' in Drizzle
+  const displayPrice = parseFloat(product.price as string).toFixed(2);
+
+  // Determine stock status based on the 'quantity' field from your schema
+  const inStock = product.quantity > 0;
+
   return (
     <div className="container mx-auto p-4 md:p-8">
       <div className="flex flex-col md:flex-row gap-8 bg-white p-6 rounded-lg shadow-lg">
         {/* Product Image Section */}
         <div className="md:w-1/2 flex justify-center items-center">
           <div className="relative w-full max-w-md h-96 bg-gray-100 rounded-md overflow-hidden">
+            {/* Use product.imageUrl from your database, with a fallback placeholder */}
             <Image
-              src={"/yohana.jpg"}
+              src={product.imageUrl || 'https://placehold.co/400x400/EEF2FF/3F20BA?text=No+Image'}
               alt={product.name}
               layout="fill" // Use fill to make the image cover the container
               objectFit="contain" // Maintain aspect ratio and fit within container
@@ -45,42 +39,41 @@ const SingleProductDisplay: React.FC<SingleProductDisplayProps> = ({ product = m
         {/* Product Details Section */}
         <div className="md:w-1/2 space-y-6">
           <h1 className="text-4xl font-extrabold text-gray-900">{product.name}</h1>
-          <p className="text-3xl font-bold text-indigo-700">${product.price.toFixed(2)}</p>
+          <p className="text-3xl font-bold text-indigo-700">${displayPrice}</p>
 
           <div className="text-gray-700">
             <h2 className="text-xl font-semibold mb-2">Description</h2>
             <ScrollArea className="h-48 w-full border rounded-md p-3 bg-gray-50">
-              <p className="text-base leading-relaxed">{product.description}</p>
+              {/* Use product.description from your database */}
+              <p className="text-base leading-relaxed">{product.description || 'No description available.'}</p>
               <ScrollBar orientation="vertical" />
             </ScrollArea>
           </div>
 
           <div className="grid grid-cols-2 gap-4 text-gray-600 text-sm">
             <div>
-              <span className="font-semibold">Category:</span> {product.category}
+              {/* Use product.category from your database */}
+              <span className="font-semibold">Category:</span> {product.category.replace(/_/g, ' ').split(' ').map(word => word.charAt(0).toUpperCase() + word.slice(1)).join(' ')}
             </div>
             <div>
-              <span className="font-semibold">Brand:</span> {product.brand}
+              {/* Use product.quantity to determine stock status */}
+              <span className="font-semibold">Availability:</span> {inStock ? `In Stock (${product.quantity})` : 'Out of Stock'}
             </div>
-            <div>
-              <span className="font-semibold">Availability:</span> {product.inStock ? 'In Stock' : 'Out of Stock'}
-            </div>
-            <div>
-              <span className="font-semibold">Rating:</span> {product.rating} ({product.reviewsCount} reviews)
-            </div>
+            {/* Removed Brand, Rating, and ReviewsCount as they are not in your current 'products' schema */}
+            {/* If you wish to display these, they need to be added to your database schema or fetched from related tables. */}
           </div>
 
           {/* Action Buttons */}
           <div className="flex flex-col sm:flex-row gap-4 mt-6">
             <button
               className="bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-3 px-6 rounded-md shadow-md transition duration-300 ease-in-out transform hover:scale-105"
-             
+              // Add onClick handler for Add to Cart functionality
             >
               Add to Cart
             </button>
             <button
               className="bg-gray-200 hover:bg-gray-300 text-gray-800 font-bold py-3 px-6 rounded-md shadow-md transition duration-300 ease-in-out transform hover:scale-105"
-             
+              // Add onClick handler for Buy Now functionality
             >
               Buy Now
             </button>
