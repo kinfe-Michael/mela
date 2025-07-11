@@ -7,7 +7,7 @@ import AllProductsClientWrapper from '@/app/components/AllProductsClientWrapper'
 import { searchProducts } from '@/util/dbUtil';
 
 export const metadata: Metadata = {
-  title: 'Home - Your Marketplace',
+  title: 'mela - Your Marketplace',
   description: 'Browse a wide variety of products from different sellers. Find what you need!',
   keywords: ['products', 'marketplace', 'shop', 'ecommerce'],
 };

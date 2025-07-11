@@ -1,6 +1,6 @@
 import { db } from './db'; 
 import { users, products, orders, orderItems, orderStatusEnum } from '../db/schema';
-import { eq,InferInsertModel,InferSelectModel, ilike,or } from 'drizzle-orm';
+import { eq,InferInsertModel,InferSelectModel, ilike,or,not,and } from 'drizzle-orm';
 import { hashPassword } from './passwordHash';
 
 
@@ -162,6 +162,28 @@ export async function searchProducts(searchTerm: string, options?: PaginationOpt
       ilike(products.description, `%${searchTerm}%`)
     ),
    
+    limit: options?.limit,
+    offset: options?.offset,
+  });
+}
+
+export async function getProductsByCategory(category: string, currentProductId?: string, options?: PaginationOptions) {
+  let whereClause: any = eq(products.category, category as any); // Initial condition for category
+
+  if (currentProductId) {
+    // If currentProductId is provided, combine with a NOT EQUAL condition
+    // CORRECTED: Use not(eq(column, value)) for 'not equal'
+    whereClause = and(
+      eq(products.category, category as any),
+      not(eq(products.id, currentProductId)) // <-- CORRECTED LINE
+    );
+  }
+
+  return db.query.products.findMany({
+    where: whereClause,
+    with: {
+      seller: true, // Include seller information if needed for display
+    },
     limit: options?.limit,
     offset: options?.offset,
   });
