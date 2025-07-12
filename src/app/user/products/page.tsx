@@ -8,6 +8,7 @@ import { fetchProductsForSeller, Product } from '@/app/actions/products'; // Pat
 import { useEffect, useRef } from 'react';
 import Link from 'next/link';
 import { Loader2 } from 'lucide-react';
+import ProductCard from '@/app/components/ProductCard';
 
 
 export default function MyProductsPage() {
@@ -135,27 +136,7 @@ export default function MyProductsPage() {
         {/* Product Grid */}
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
           {allProducts.map((product) => (
-            <div key={product.id} className="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-lg transition-shadow duration-200">
-              {product.imageUrl && (
-                <img
-                  src={product.imageUrl}
-                  alt={product.name}
-                  className="w-full h-48 object-cover"
-                />
-              )}
-              <div className="p-4">
-                <h3 className="text-lg font-semibold text-gray-800 truncate mb-1">{product.name}</h3>
-                <p className="text-gray-600 text-sm mb-2 line-clamp-2">{product.description}</p>
-                <div className="flex justify-between items-center mt-2">
-                  <span className="text-blue-600 font-bold text-xl">${product.price}</span>
-                  <span className="text-gray-500 text-sm">Qty: {product.quantity}</span>
-                </div>
-                <p className="text-gray-500 text-xs mt-1">Category: {product.category.replace(/_/g, ' ').replace(/\b\w/g, (char: string) => char.toUpperCase())}</p>
-                <div className="mt-4 flex justify-end space-x-2">
-
-                </div>
-              </div>
-            </div>
+            <ProductCard key={product.id} product={product} showActions={true} />
           ))}
         </div>
 

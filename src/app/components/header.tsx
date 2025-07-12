@@ -84,7 +84,7 @@ function Header() {
         <Link href={"/"} className="px-2 text-xs hidden md:block font-bold bg-transparent shadow-none hover:bg-gray-200 text-black ">products</Link >
         <Link href={"/orders"} className="px-2 text-xs hidden md:block font-bold bg-transparent shadow-none hover:bg-gray-200 text-black ">order</Link >
         <Link href={"/cart"} className="px-2 text-xs hidden md:block font-bold bg-transparent shadow-none hover:bg-gray-200 text-black ">cart</Link>
-        {!isLoggedIn && <Link  className="md:hidden" href={"/auth/login"}>
+        {!isLoggedIn && <Link  className="" href={"/auth/login"}>
         <Button className="bg-[#FF3B30] text-xs px-3 hover:bg-[#ff3a30d8] font-bold">
          Login
         </Button>

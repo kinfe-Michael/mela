@@ -1,13 +1,12 @@
-// middleware.ts
 import { NextResponse } from 'next/server';
 import type { NextRequest } from 'next/server';
-import { jwtVerify } from 'jose'; // Import jwtVerify from jose
+import { jwtVerify } from 'jose'; 
 
 export async function middleware(request: NextRequest) {
   console.log("MIDDLEWARE RUNNING FOR:", request.nextUrl.pathname);
 
   const token = request.cookies.get('auth_token')?.value;
-  const protectedPaths = ['/user/addProduct', '/orders'];
+  const protectedPaths = ['/user/products', '/orders'];
 
   const isProtectedPath = protectedPaths.some(path =>
     request.nextUrl.pathname.startsWith(path)
@@ -20,19 +19,14 @@ export async function middleware(request: NextRequest) {
 
   if (token) {
     try {
-      // Ensure your JWT_SECRET is a string that can be encoded
       const secret = new TextEncoder().encode(
         process.env.JWT_SECRET || 'your_super_secret_key_please_change_this_in_production'
       );
 
-      // Use jwtVerify from jose
-      // The 'auth_token' should generally contain the full JWT
       await jwtVerify(token, secret);
       console.log('Token successfully verified using jose.');
 
-      // Optionally, you can access the payload if needed:
-      // const { payload } = await jwtVerify(token, secret);
-      // console.log('Decoded payload:', payload);
+      
 
     } catch (error) {
       console.error('JWT verification failed (jose):', error);
