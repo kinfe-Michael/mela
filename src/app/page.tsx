@@ -35,13 +35,6 @@ export default async function HomePage() {
   return (
     <PageWraper>
       <div className="p-4 sm:p-6 lg:p-8 font-sans min-h-screen bg-gray-100">
-        <div className="flex justify-between items-center mb-6">
-          <h1 className="text-3xl font-bold text-gray-800">All Products</h1>
-          <Link href="/add-product" className="bg-green-600 text-white py-2 px-4 rounded-md hover:bg-green-700 transition-colors duration-200">
-            Sell Your Product
-          </Link>
-        </div>
-
         <AllProductsClientWrapper
           initialProducts={initialProducts}
           initialHasMore={initialHasMore}

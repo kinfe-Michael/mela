@@ -63,15 +63,15 @@ export async function deleteUser(userId: string) {
 
 interface AddProductResult {
   success: boolean;
-  product?: InferSelectModel<typeof products>; // The inferred select model for a product
+  product?: InferSelectModel<typeof products>; 
   error?: string;
 }
 interface AddProductParams {
   name: string;
   description: string | null;
-  price: string; // Keep as string for numeric type
+  price: string; 
   quantity: number;
-  category: string; // Add category here
+  category: string; 
   imageUrl: string | null;
   sellerId: string;
 }
@@ -83,10 +83,10 @@ export async function addProduct(params: AddProductParams) {
       description: params.description,
       price: params.price,
       quantity: params.quantity,
-      category: params.category as any, // Cast to any because Drizzle might expect a specific enum type
+      category: params.category as any, 
       imageUrl: params.imageUrl,
       sellerId: params.sellerId,
-    }).returning(); // .returning() is important to get the inserted product back
+    }).returning(); 
 
     return { success: true, product: newProduct };
   } catch (error: any) {
@@ -132,22 +132,15 @@ export async function getAllProducts(options?: PaginationOptions) {
   });
 }
 
-export async function updateProduct(productId: string, updates: Partial<Omit<typeof products.$inferInsert, 'id' | 'createdAt' | 'updatedAt'>>) {
-  try {
-    const [updatedProduct] = await db.update(products).set(updates).where(eq(products.id, productId)).returning();
-    return updatedProduct;
-  } catch (error) {
-    console.error("Error updating product:", error);
-    throw error;
-  }
-}
+
 
 export async function deleteProduct(productId: string) {
+
   try {
-    const [deletedProduct] = await db.delete(products).where(eq(products.id, productId)).returning();
+    const [deletedProduct] = await db.delete(products).where(eq(products.id,productId )).returning();
     return deletedProduct;
   } catch (error) {
-    console.error("Error deleting product:", error);
+   
     throw error;
   }
 }
@@ -171,20 +164,30 @@ export async function getProductsByCategory(category: string, currentProductId?:
   let whereClause: any = eq(products.category, category as any); // Initial condition for category
 
   if (currentProductId) {
-    // If currentProductId is provided, combine with a NOT EQUAL condition
-    // CORRECTED: Use not(eq(column, value)) for 'not equal'
+
     whereClause = and(
       eq(products.category, category as any),
-      not(eq(products.id, currentProductId)) // <-- CORRECTED LINE
+      not(eq(products.id, currentProductId))
     );
   }
 
   return db.query.products.findMany({
     where: whereClause,
-    with: {
-      seller: true, // Include seller information if needed for display
-    },
+   
     limit: options?.limit,
     offset: options?.offset,
   });
+}
+
+export async function updateProduct(productId: string, updates: Partial<Omit<InferInsertModel<typeof products>, 'id' | 'createdAt' | 'updatedAt'>>) {
+  try {
+    const [updatedProduct] = await db.update(products)
+      .set(updates)
+      .where(eq(products.id, productId))
+      .returning();
+    return updatedProduct;
+  } catch (error) {
+    console.error("Error updating product:", error);
+    throw error; 
+  }
 }
