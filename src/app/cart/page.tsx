@@ -3,7 +3,8 @@
 
 import React, { useEffect } from 'react';
 // Removed import for useCartStore from '../store/useCartStore' as it will be inlined.
-
+import useCartStore from '@/store/useCartStore';
+import PageWraper from '../components/PageWraper';
 // Define the CartItem interface
 interface CartItem {
   id: string;
@@ -13,100 +14,11 @@ interface CartItem {
   quantity: number;
 }
 
-// --- START: Inlined Zustand Store Definition ---
-import { create } from 'zustand';
 
-// Define the Zustand store interface
-interface CartState {
-  cartItems: CartItem[];
-  loading: boolean; // Indicates if cart data is being loaded (e.g., from local storage or API)
-  setCartItems: (items: CartItem[]) => void;
-  setLoading: (status: boolean) => void;
-  increaseQuantity: (id: string) => void;
-  decreaseQuantity: (id: string) => void;
-  addItem: (item: Omit<CartItem, 'quantity'>, quantity?: number) => void; // Add item to cart
-  removeItem: (id: string) => void;
-  clearCart: () => void;
-  calculateTotal: () => number;
-}
-
-const useCartStore = create<CartState>((set, get) => ({
-  cartItems: [],
-  loading: true, // Default to true, assuming data will be loaded
-
-  setCartItems: (items) => set({ cartItems: items }),
-  setLoading: (status) => set({ loading: status }),
-
-  increaseQuantity: (id) =>
-    set((state) => ({
-      cartItems: state.cartItems.map((item) =>
-        item.id === id ? { ...item, quantity: item.quantity + 1 } : item
-      ),
-    })),
-
-  decreaseQuantity: (id) =>
-    set((state) => ({
-      cartItems: state.cartItems.map((item) =>
-        item.id === id ? { ...item, quantity: Math.max(1, item.quantity - 1) } : item
-      ),
-    })),
-
-  addItem: (itemToAdd, quantity = 1) =>
-    set((state) => {
-      const existingItem = state.cartItems.find((item) => item.id === itemToAdd.id);
-      if (existingItem) {
-        // If item exists, increase its quantity
-        return {
-          cartItems: state.cartItems.map((item) =>
-            item.id === itemToAdd.id ? { ...item, quantity: item.quantity + quantity } : item
-          ),
-        };
-      } else {
-        // If item does not exist, add it to the cart
-        return {
-          cartItems: [...state.cartItems, { ...itemToAdd, quantity }],
-        };
-      }
-    }),
-
-  removeItem: (id) =>
-    set((state) => ({
-      cartItems: state.cartItems.filter((item) => item.id !== id),
-    })),
-
-  clearCart: () => set({ cartItems: [] }),
-
-  calculateTotal: () => {
-    const { cartItems } = get();
-    return cartItems.reduce((total, item) => total + item.price * item.quantity, 0);
-  },
-}));
 // --- END: Inlined Zustand Store Definition ---
 
 // Mock initial cart data (now used to populate the store on initial load)
-const initialCartItems: CartItem[] = [
-  {
-    id: 'headphones-1',
-    name: 'Wireless Bluetooth Headphones',
-    price: 79.99,
-    imageUrl: 'https://placehold.co/100x100/EEF2FF/3F20BA?text=Headphones',
-    quantity: 1,
-  },
-  {
-    id: 'laptop-stand-2',
-    name: 'Ergonomic Laptop Stand',
-    price: 35.50,
-    imageUrl: 'https://placehold.co/100x100/D1FAE5/065F46?text=Laptop+Stand',
-    quantity: 2,
-  },
-  {
-    id: 'mouse-3',
-    name: 'Gaming Mouse RGB',
-    price: 49.00,
-    imageUrl: 'https://placehold.co/100x100/FEE2E2/991B1B?text=Gaming+Mouse',
-    quantity: 1,
-  },
-];
+
 
 const CartPage: React.FC = () => {
   // Use Zustand store for state management
@@ -122,14 +34,7 @@ const CartPage: React.FC = () => {
     calculateTotal 
   } = useCartStore();
 
-  useEffect(() => {
-    // Simulate fetching cart data and setting it to the store
-    setLoading(true);
-    setTimeout(() => {
-      setCartItems(initialCartItems); // Set initial data using store action
-      setLoading(false);
-    }, 800); // Simulate a short loading time
-  }, [setCartItems, setLoading]); // Depend on setters from Zustand
+ // Depend on setters from Zustand
 
   const handleOrderNow = () => {
     if (cartItems.length === 0) {
@@ -142,38 +47,11 @@ const CartPage: React.FC = () => {
     clearCart(); // Clear cart after successful order
   };
 
-  if (loading) {
-    return (
-      <div className="min-h-screen bg-gray-100 py-8 px-4 sm:px-6 lg:px-8 flex justify-center items-center">
-        <div className="w-full max-w-4xl bg-white p-6 rounded-lg shadow-lg animate-pulse">
-          <div className="h-10 bg-gray-200 rounded w-1/3 mb-6 mx-auto"></div> {/* Title skeleton */}
-          {Array.from({ length: 3 }).map((_, index) => (
-            <div key={index} className="flex items-center gap-4 py-4 border-b border-gray-200 last:border-b-0">
-              <div className="w-20 h-20 bg-gray-200 rounded-md flex-shrink-0"></div> {/* Image skeleton */}
-              <div className="flex-grow space-y-2">
-                <div className="h-4 bg-gray-200 rounded w-3/4"></div> {/* Name skeleton */}
-                <div className="h-4 bg-gray-200 rounded w-1/4"></div> {/* Price skeleton */}
-              </div>
-              <div className="flex items-center gap-2">
-                <div className="h-8 w-8 bg-gray-200 rounded-full"></div> {/* Decrease button skeleton */}
-                <div className="h-6 w-8 bg-gray-200 rounded"></div> {/* Quantity skeleton */}
-                <div className="h-8 w-8 bg-gray-200 rounded-full"></div> {/* Increase button skeleton */}
-              </div>
-              <div className="h-8 w-8 bg-gray-200 rounded-full"></div> {/* Remove button skeleton */}
-            </div>
-          ))}
-          <div className="h-6 bg-gray-200 rounded w-1/2 mt-6 ml-auto"></div> {/* Total skeleton */}
-          <div className="flex justify-end gap-4 mt-6">
-            <div className="h-12 w-32 bg-gray-200 rounded-md"></div> {/* Clear Cart button skeleton */}
-            <div className="h-12 w-32 bg-gray-200 rounded-md"></div> {/* Order Now button skeleton */}
-          </div>
-        </div>
-      </div>
-    );
-  }
+
 
   return (
-    <div className="min-h-screen bg-gray-100 py-8 px-4 sm:px-6 lg:px-8">
+   <PageWraper>
+     <div className="min-h-screen bg-gray-100 py-8 px-4 sm:px-6 lg:px-8">
       <div className="container mx-auto max-w-4xl bg-white p-6 rounded-lg shadow-lg">
         <h1 className="text-3xl font-extrabold text-gray-900 text-center mb-8">Your Shopping Cart</h1>
 
@@ -266,6 +144,7 @@ const CartPage: React.FC = () => {
         )}
       </div>
     </div>
+   </PageWraper>
   );
 };
 
