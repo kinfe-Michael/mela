@@ -6,9 +6,9 @@ import { useAuthStore } from '@/lib/authStore';
 import { useInfiniteQuery } from '@tanstack/react-query';
 import { fetchProductsForSeller, Product } from '@/app/actions/products'; // Path to your Server Action
 import { useEffect, useRef } from 'react';
-import Link from 'next/link';
 import { Loader2 } from 'lucide-react';
 import ProductCard from '@/app/components/ProductCard';
+import NavLink from '@/app/components/CustomNavLink';
 
 
 export default function MyProductsPage() {
@@ -90,9 +90,9 @@ export default function MyProductsPage() {
         <div className="flex flex-col items-center justify-center min-h-screen text-gray-700">
           <h2 className="text-2xl font-semibold mb-4">Please Log In to View Your Products</h2>
           <p className="text-lg mb-6">You need to be logged in to manage your sales.</p>
-          <Link href="/login" className="bg-blue-600 text-white py-3 px-6 rounded-md hover:bg-blue-700 transition-colors duration-200">
+          <NavLink href="/login" className="bg-blue-600 text-white py-3 px-6 rounded-md hover:bg-blue-700 transition-colors duration-200">
             Go to Login
-          </Link>
+          </NavLink>
         </div>
       </PageWraper>
     );
@@ -115,9 +115,9 @@ export default function MyProductsPage() {
         <div className="flex flex-col items-center justify-center min-h-screen text-gray-700">
           <h2 className="text-2xl font-semibold mb-4">You haven't posted any products yet!</h2>
           <p className="text-lg mb-6">Start selling by adding your first product.</p>
-          <Link href="/add-product" className="bg-blue-600 text-white py-3 px-6 rounded-md hover:bg-blue-700 transition-colors duration-200">
+          <NavLink href="/add-product" className="bg-blue-600 text-white py-3 px-6 rounded-md hover:bg-blue-700 transition-colors duration-200">
             Add New Product
-          </Link>
+          </NavLink>
         </div>
       </PageWraper>
     );
@@ -128,9 +128,9 @@ export default function MyProductsPage() {
       <div className="p-4 sm:p-6 lg:p-8 font-sans min-h-screen bg-gray-100">
         <div className="flex justify-between items-center mb-6">
           <h1 className="text-3xl font-bold text-gray-800">Your Products for Sale</h1>
-          <Link href="/user/addProduct" className="bg-green-600 text-white py-2 px-4 rounded-md hover:bg-green-700 transition-colors duration-200">
+          <NavLink href="/user/addProduct" className="bg-green-600 text-white py-2 px-4 rounded-md hover:bg-green-700 transition-colors duration-200">
             Add Product
-          </Link>
+          </NavLink>
         </div>
 
         {/* Product Grid */}

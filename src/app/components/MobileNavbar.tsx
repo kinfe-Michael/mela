@@ -4,9 +4,10 @@ import { Home, Library, Search } from "lucide-react"; // Importing icons from lu
 import { LucideIcon } from "lucide-react"; // Import the type for Lucide icons
 import { openSearchBar } from "@/lib/searchStateOperation";
 import { BiCart } from "react-icons/bi";
+import { useCustomRouter } from "@/hooks/useCustomRouter";
 export default function MobileNavbar() {
   const [activeLink, setActiveLink] = useState<string>("home");
-
+ const router = useCustomRouter()
   return (
     <nav
       className="fixed bottom-0 left-0 w-full bg-white text-black p-2
@@ -18,7 +19,10 @@ export default function MobileNavbar() {
         label="Home"
         linkName="home"
         active={activeLink === "home"}
-        onClick={() => setActiveLink("home")}
+        onClick={() => {
+          setActiveLink("home")
+          router.push("/")
+        }}
       />
 
       <NavItem
@@ -26,7 +30,10 @@ export default function MobileNavbar() {
         label="Catagory"
         linkName="Catagory"
         active={activeLink === "Catagory"}
-        onClick={() => setActiveLink("Catagory")}
+        onClick={() => {
+          setActiveLink("Catagory")
+          router.push("/category")
+        }}
       />
 
       <NavItem
@@ -37,6 +44,7 @@ export default function MobileNavbar() {
         onClick={() => {
           setActiveLink("search")
           openSearchBar()
+          
         }}
       />
 
@@ -45,7 +53,10 @@ export default function MobileNavbar() {
         label="Cart"
         linkName="Cart"
         active={activeLink === "Cart"}
-        onClick={() => setActiveLink("Cart")}
+        onClick={() => {
+          setActiveLink("Cart")
+          router.push("/cart")
+        }}
       />
     </nav>
   );

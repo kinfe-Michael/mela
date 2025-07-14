@@ -2,7 +2,6 @@
 "use client"; // This component needs to be a Client Component if it uses client-side hooks or event handlers
 
 import Image from 'next/image'; // For optimized image loading
-import Link from 'next/link'; // For linking to product detail page
 import { useRouter } from 'next/navigation'; // For client-side navigation after delete
 
 import { InferSelectModel } from 'drizzle-orm'; // Import for type safety
@@ -11,6 +10,7 @@ import { slugify } from '@/util/slugify'; // Import the slugify utility
 import { deleteProductAction } from '@/app/actions/deleteProduct'; // Import the delete Server Action
 // import { useToast } from '@/components/ui/use-toast'; // Assuming you have a toast notification system
 import { useState, useTransition } from 'react'; // For managing pending state and confirmation modal
+import NavLink from './CustomNavLink';
 
 // Define the props interface for ProductCard
 interface ProductCardProps {
@@ -41,7 +41,7 @@ const ProductCard: React.FC<ProductCardProps> = ({ product, showActions = false 
   // const editProductHref = `/dashboard/products/edit/${product.id}`; // Edit page uses product ID directly
 
   const handleDeleteClick = (e: React.MouseEvent) => {
-    e.stopPropagation(); // Prevent the Link from navigating
+    e.stopPropagation(); // Prevent the NavLink from navigating
     setShowConfirmModal(true); // Show confirmation modal
   };
 
@@ -77,10 +77,10 @@ const ProductCard: React.FC<ProductCardProps> = ({ product, showActions = false 
 
   return (
     <>
-      {/* Wrap the entire card in a Link component to make it clickable */}
+      {/* Wrap the entire card in a NavLink component to make it clickable */}
      
       <div>
-         <Link href={productDetailHref} passHref className="block">
+         <NavLink href={productDetailHref} passHref className="block">
         <div className="bg-white flex flex-col items-center w-64 p-1 rounded-lg shadow-md overflow-hidden hover:shadow-lg transition-shadow duration-200">
           {/* Using Next.js Image component for optimization */}
           <div className="relative w-48 h-48"> {/* Container for the Image component */}
@@ -111,17 +111,17 @@ const ProductCard: React.FC<ProductCardProps> = ({ product, showActions = false 
      
           </div>
         </div>
-      </Link>
+      </NavLink>
              {showActions && (
               <div className="mt-4 flex justify-center space-x-2 w-full">
-                <Link href={`/products/edit/${product.id}`} passHref>
+                <NavLink href={`/products/edit/${product.id}`} passHref>
                   <button
                     className="text-sm bg-indigo-500 hover:bg-indigo-600 text-white py-1 px-3 rounded-md transition-colors duration-200"
-                    onClick={(e) => e.stopPropagation()} // Prevent Link navigation when button is clicked
+                    onClick={(e) => e.stopPropagation()} // Prevent NavLink navigation when button is clicked
                   >
                     Edit
                   </button>
-                </Link>
+                </NavLink>
                 <button
                   className="text-sm bg-red-500 hover:bg-red-600 text-white py-1 px-3 rounded-md transition-colors duration-200"
                   onClick={handleDeleteClick} // Use the handler that shows modal

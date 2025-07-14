@@ -1,7 +1,6 @@
 
 import PageWraper from '@/app/components/PageWraper';
 import { fetchAllProducts } from '@/app/actions/all-products'; // Import your Server Action
-import Link from 'next/link';
 import { Metadata } from 'next'; 
 import AllProductsClientWrapper from '@/app/components/AllProductsClientWrapper'; // Import the new client wrapper
 import { searchProducts } from '@/util/dbUtil';

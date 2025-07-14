@@ -3,6 +3,8 @@ import React, { ChangeEvent, useEffect, useState } from 'react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { HiMagnifyingGlass } from 'react-icons/hi2';
+import { slugify } from '@/util/slugify';
+import NavLink from './CustomNavLink';
 
 
 interface SearchResultsOverlayProps {
@@ -99,7 +101,8 @@ export function SearchResultsOverlay({ searchTerm, onClose,setSearchTerm }: Sear
           <ScrollArea className="h-full max-h-[calc(100vh-150px)] md:max-h-[300px]">
             <ul className="space-y-2  text-black pb-4">
               {searchResult.map((item) => (
-                <li
+                <NavLink 
+                href={`/products/${slugify(item.name)}?id=${item.id}`}
                   key={item.id} 
                   className="p-3 flex items-center gap-4 hover:bg-gray-200 rounded-md cursor-pointer transition-colors duration-200"
                 >
@@ -112,7 +115,7 @@ export function SearchResultsOverlay({ searchTerm, onClose,setSearchTerm }: Sear
                     <p className="text-base font-semibold ">{item.name}</p>
                     <p className="text-sm text-gray-400">{item.price} ETB</p>
                   </div>
-                </li>
+                </NavLink>
               ))}
             </ul>
           </ScrollArea>
