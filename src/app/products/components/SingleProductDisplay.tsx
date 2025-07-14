@@ -5,6 +5,7 @@ import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area"; // Assuming
 
 import { InferSelectModel } from 'drizzle-orm'; // Import for type safety
 import { products } from '@/db/schema'; // Import your Drizzle schema for 'products' type
+import AddtoCartAndOrder from './AddtoCartAndOrder';
 
 // Define the props interface for SingleProductDisplay
 interface SingleProductDisplayProps {
@@ -65,18 +66,7 @@ const SingleProductDisplay: React.FC<SingleProductDisplayProps> = ({ product }) 
 
           {/* Action Buttons */}
           <div className="flex flex-col sm:flex-row gap-4 mt-6">
-            <button
-              className="bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-3 px-6 rounded-md shadow-md transition duration-300 ease-in-out transform hover:scale-105"
-              // Add onClick handler for Add to Cart functionality
-            >
-              Add to Cart
-            </button>
-            <button
-              className="bg-gray-200 hover:bg-gray-300 text-gray-800 font-bold py-3 px-6 rounded-md shadow-md transition duration-300 ease-in-out transform hover:scale-105"
-              // Add onClick handler for Buy Now functionality
-            >
-              Buy Now
-            </button>
+           <AddtoCartAndOrder price={parseInt(product?.price)} imageUrl={product?.imageUrl || "https"} name={product?.name} id={product?.id} />
           </div>
         </div>
       </div>

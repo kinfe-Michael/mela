@@ -1,5 +1,6 @@
 // store/useCartStore.ts
 import { create } from 'zustand';
+import { persist, createJSONStorage } from 'zustand/middleware';
 
 // Define the CartItem interface
 export interface CartItem {
@@ -24,57 +25,65 @@ interface CartState {
   calculateTotal: () => number;
 }
 
-// Create the Zustand store
-const useCartStore = create<CartState>((set, get) => ({
-  cartItems: [],
-  loading: true, // Default to true, assuming data will be loaded
+// Create the Zustand store with persistence
+const useCartStore = create<CartState>()(
+  persist(
+    (set, get) => ({
+      cartItems: [],
+      loading: true, // Default to true, assuming data will be loaded
 
-  setCartItems: (items) => set({ cartItems: items }),
-  setLoading: (status) => set({ loading: status }),
+      setCartItems: (items) => set({ cartItems: items }),
+      setLoading: (status) => set({ loading: status }),
 
-  increaseQuantity: (id) =>
-    set((state) => ({
-      cartItems: state.cartItems.map((item) =>
-        item.id === id ? { ...item, quantity: item.quantity + 1 } : item
-      ),
-    })),
-
-  decreaseQuantity: (id) =>
-    set((state) => ({
-      cartItems: state.cartItems.map((item) =>
-        item.id === id ? { ...item, quantity: Math.max(1, item.quantity - 1) } : item
-      ),
-    })),
-
-  addItem: (itemToAdd, quantity = 1) =>
-    set((state) => {
-      const existingItem = state.cartItems.find((item) => item.id === itemToAdd.id);
-      if (existingItem) {
-        // If item exists, increase its quantity
-        return {
+      increaseQuantity: (id) =>
+        set((state) => ({
           cartItems: state.cartItems.map((item) =>
-            item.id === itemToAdd.id ? { ...item, quantity: item.quantity + quantity } : item
+            item.id === id ? { ...item, quantity: item.quantity + 1 } : item
           ),
-        };
-      } else {
-        // If item does not exist, add it to the cart
-        return {
-          cartItems: [...state.cartItems, { ...itemToAdd, quantity }],
-        };
-      }
+        })),
+
+      decreaseQuantity: (id) =>
+        set((state) => ({
+          cartItems: state.cartItems.map((item) =>
+            item.id === id ? { ...item, quantity: Math.max(1, item.quantity - 1) } : item
+          ),
+        })),
+
+      addItem: (itemToAdd, quantity = 1) =>
+        set((state) => {
+          const existingItem = state.cartItems.find((item) => item.id === itemToAdd.id);
+          if (existingItem) {
+            // If item exists, increase its quantity
+            return {
+              cartItems: state.cartItems.map((item) =>
+                item.id === itemToAdd.id ? { ...item, quantity: item.quantity + quantity } : item
+              ),
+            };
+          } else {
+            // If item does not exist, add it to the cart
+            return {
+              cartItems: [...state.cartItems, { ...itemToAdd, quantity }],
+            };
+          }
+        }),
+
+      removeItem: (id) =>
+        set((state) => ({
+          cartItems: state.cartItems.filter((item) => item.id !== id),
+        })),
+
+      clearCart: () => set({ cartItems: [] }),
+
+      calculateTotal: () => {
+        const { cartItems } = get();
+        return cartItems.reduce((total, item) => total + item.price * item.quantity, 0);
+      },
     }),
-
-  removeItem: (id) =>
-    set((state) => ({
-      cartItems: state.cartItems.filter((item) => item.id !== id),
-    })),
-
-  clearCart: () => set({ cartItems: [] }),
-
-  calculateTotal: () => {
-    const { cartItems } = get();
-    return cartItems.reduce((total, item) => total + item.price * item.quantity, 0);
-  },
-}));
+    {
+      name: 'cart-data', // unique name for the storage key
+      storage: createJSONStorage(() => localStorage), // (optional) by default, 'localStorage' is used
+    }
+  )
+);
 
 export default useCartStore;
