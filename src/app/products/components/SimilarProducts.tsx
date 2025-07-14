@@ -2,7 +2,6 @@
 "use client"; // This component needs to be a Client Component
 
 import React from 'react';
-import Link from 'next/link'; // Import Link for navigation
 import ProductCard from '../../components/ProductCard'; // Import the ProductCard component
 import { InferSelectModel } from 'drizzle-orm'; // Import for type safety
 import { products } from '@/db/schema'; // Import your Drizzle schema for 'products' type

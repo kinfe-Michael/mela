@@ -3,10 +3,10 @@
 
 import { useInfiniteQuery } from '@tanstack/react-query';
 import { useEffect, useRef } from 'react';
-import Link from 'next/link';
 import { Loader2 } from 'lucide-react';
 import ProductCard from '@/app/components/ProductCard';
 import { fetchAllProducts, Product } from '@/app/actions/all-products'; // Import for client-side fetching
+import NavLink from './CustomNavLink';
 
 interface AllProductsClientWrapperProps {
   initialProducts: Product[];
@@ -112,9 +112,9 @@ const AllProductsClientWrapper: React.FC<AllProductsClientWrapperProps> = ({
       <div className="flex flex-col items-center justify-center min-h-[40vh] text-gray-700">
         <h2 className="text-2xl font-semibold mb-4">No products available yet!</h2>
         <p className="text-lg mb-6">Check back later or consider adding some.</p>
-        <Link href="/add-product" className="bg-blue-600 text-white py-3 px-6 rounded-md hover:bg-blue-700 transition-colors duration-200">
+        <NavLink href="/add-product" className="bg-blue-600 text-white py-3 px-6 rounded-md hover:bg-blue-700 transition-colors duration-200">
           Add New Product
-        </Link>
+        </NavLink>
       </div>
     );
   }

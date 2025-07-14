@@ -13,7 +13,7 @@ import SidebarContent from "./SidebarContent";
 import Image from "next/image";
 import { Button } from "@/components/ui/button";
 import { useAuthStore } from "@/lib/authStore";
-import Link from "next/link";
+import NavLink from "./CustomNavLink";
 function PhoneSidebar() {
   const [isSheetOpen, setIsSheetOpen] = useState(false);
   const {isLoading,isLoggedIn,logout} = useAuthStore((state)=>state)
@@ -39,15 +39,15 @@ function PhoneSidebar() {
           </div>
        
         <SidebarContent />
-        {!isLoggedIn &&<Link onClick={()=> setIsSheetOpen(false)} href={"/auth/login"} className="p-2 rounded-md text-center  px-2 text-xs bg-white text-black border mx-4 border-gray-300  md:block font-bold">
+        {!isLoggedIn &&<NavLink onClick={()=> setIsSheetOpen(false)} href={"/auth/login"} className="p-2 rounded-md text-center  px-2 text-xs bg-white text-black border mx-4 border-gray-300  md:block font-bold">
             Login
-          </Link>
+          </NavLink>
           }
           {
             !isLoggedIn && 
-            <Link onClick={()=> setIsSheetOpen(false)} href={"/auth/signup"} className="p-2 rounded-md text-center text-white bg-green-500 text-sm mx-4   px-1 hover:bg-green-700 font-bold">
+            <NavLink onClick={()=> setIsSheetOpen(false)} href={"/auth/signup"} className="p-2 rounded-md text-center text-white bg-green-500 text-sm mx-4   px-1 hover:bg-green-700 font-bold">
             Sign up
-          </Link>
+          </NavLink>
           }
           {
             isLoggedIn && <Button onClick={()=>{

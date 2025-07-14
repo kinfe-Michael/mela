@@ -6,6 +6,8 @@ import BottomContainer from "./components/BottomContainer"; // If you have a fix
 import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area"; // Still needed for your Scroller component, but not necessarily this root layout's structure
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
+import GlobalLoadingSpinner from "./components/GlobalLoadingSpinner";
+import ProgressBar from "./components/ProgressBar";
 
 
 const queryClient = new QueryClient();
@@ -32,6 +34,7 @@ export default function RootLayout({
         </div>
           <ReactQueryDevtools initialIsOpen={false} />
          </QueryClientProvider>
+         <ProgressBar/>
       </body>
     </html>
   );
