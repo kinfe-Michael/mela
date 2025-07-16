@@ -227,16 +227,28 @@ export async function getReviewsByProductId(productId: string, options?: Paginat
 }
 
 export async function getAverageRatingForProduct(productId: string) {
+  // console.log statements are for debugging and can be removed in production
+  console.log("productId from getAverageRatingForProduct:", productId);
+
   try {
     const result = await db
       .select({
-        averageRating: sql<number>`avg(${reviews.rating})`.as('averageRating'),
+        // The AVG function will likely return a string for numeric types in Drizzle
+        averageRating: sql<string>`avg(${reviews.rating})`.as('averageRating'),
       })
       .from(reviews)
       .where(eq(reviews.productId, productId));
 
-    // The result will be an array, and the averageRating might be null if no reviews
-    return result[0]?.averageRating || 0;
+    const avgRatingString = result[0]?.averageRating;
+
+    // Parse the string to a floating-point number
+    if (avgRatingString !== undefined && avgRatingString !== null) {
+      const parsedRating = parseFloat(avgRatingString);
+      // Ensure it's a valid number, otherwise return 0
+      return isNaN(parsedRating) ? 0 : parsedRating;
+    }
+
+    return 0; // Return 0 if no reviews or averageRating is null/undefined
   } catch (error) {
     console.error("Error calculating average rating:", error);
     return 0; // Return 0 or handle error appropriately

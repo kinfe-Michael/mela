@@ -5,47 +5,47 @@ import React from 'react';
 import { notFound, redirect } from 'next/navigation';
 import { InferSelectModel } from 'drizzle-orm';
 import { products } from '@/db/schema';
-import { getProductById, getProductsByCategory } from '@/util/dbUtil';
-import { slugify } from '@/util/slugify';
+import { getProductById, getProductsByCategory } from '@/util/dbUtil'; // Ensure getProductById and getProductsByCategory are imported
+import { slugify } from '@/util/slugify'; // Assuming you have this utility
 
 import PageWraper from '@/app/components/PageWraper';
 import SingleProductDisplay from '../components/SingleProductDisplay';
 import SimilarProducts from '../components/SimilarProducts';
+import ProductReviews from '@/app/components/ProductReviews'; // NEW: Import ProductReviews
+import AddReviewForm from '@/app/components/AddReviewForm'; // NEW: Import AddReviewForm
+
 import type { Metadata } from 'next';
 
 // Define the type for the product data, directly from your Drizzle schema
 type ProductType = InferSelectModel<typeof products>;
 
-// Define props for the page component, including dynamic segment and query parameters
-
-
 // The main page component is an async Server Component
 export default async function ProductDetailPage({ params, searchParams }: {
-  params: Promise < {
-    productNameSlug: string
-  } > ;
-  searchParams: Promise < {
-    [id: string]: string | undefined
-  } > ;
+  params: {
+    productNameSlug: string;
+  };
+  searchParams: {
+    id: string | undefined;
+  };
 }) {
-  
-  const {productNameSlug} =  await params;
-  const {id} =  await searchParams;
-  const productId = id
-  console.log(params)
-  console.log(productId)
+  const { productNameSlug } = params;
+  const { id: productId } = searchParams; // Renamed 'id' to 'productId' for clarity
 
   if (!productId) {
     notFound();
   }
 
-  const product: ProductType | undefined = await getProductById(productId); // Await the data fetching function
+  const product: ProductType | undefined = await getProductById(productId);
 
   if (!product) {
     notFound();
   }
 
-  
+  // Ensure the slug matches for SEO and correctness, redirect if not
+  const expectedSlug = slugify(product.name);
+  if (productNameSlug !== expectedSlug) {
+    redirect(`/products/${expectedSlug}?id=${productId}`);
+  }
 
   const similarProducts: ProductType[] = await getProductsByCategory(
     product.category,
@@ -57,9 +57,41 @@ export default async function ProductDetailPage({ params, searchParams }: {
     <PageWraper>
       <SingleProductDisplay product={product} />
 
+      {/* NEW: Product Reviews Section */}
+      <ProductReviews productId={product.id} />
+
+      {/* NEW: Add Review Form */}
+      <AddReviewForm productId={product.id} productNameSlug={productNameSlug} />
+
       {similarProducts.length > 0 && (
         <SimilarProducts products={similarProducts} />
       )}
     </PageWraper>
   );
+}
+
+// Optional: Generate dynamic metadata for SEO
+export async function generateMetadata({ params, searchParams }: {
+  params: { productNameSlug: string };
+  searchParams: { id: string | undefined };
+}): Promise<Metadata> {
+  const productId = searchParams.id;
+  if (!productId) {
+    return { title: 'Product Not Found' };
+  }
+
+  const product = await getProductById(productId);
+
+  if (!product) {
+    return { title: 'Product Not Found' };
+  }
+
+  return {
+    title: product.name,
+    description: product.description || `Details for ${product.name}`,
+    // Add more SEO meta tags as needed
+    openGraph: {
+      images: product.imageUrl ? [product.imageUrl] : [],
+    },
+  };
 }
