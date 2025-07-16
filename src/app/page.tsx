@@ -33,7 +33,7 @@ export default async function HomePage() {
 
   return (
     <PageWraper>
-      <div className="p-4 sm:p-6 lg:p-8 font-sans min-h-screen bg-gray-100">
+      <div className="p-4 sm:p-6 lg:p-8   font-sans min-h-screen bg-gray-100">
         <AllProductsClientWrapper
           initialProducts={initialProducts}
           initialHasMore={initialHasMore}

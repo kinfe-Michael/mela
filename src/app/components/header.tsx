@@ -90,7 +90,7 @@ function Header() {
         </Button>
         </NavLink>}
          {isLoggedIn && 
-        <Button onClick={logout} className="bg-gray-200 md:hidden text-xs text-black px-3 hover:bg-gray-50 font-bold">
+        <Button onClick={logout} className="bg-gray-200 md:flex hidden text-xs text-black px-3 hover:bg-gray-50 font-bold">
          Logout
         </Button>
        }

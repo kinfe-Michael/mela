@@ -118,6 +118,7 @@ export default function MyProductsPage() {
           <NavLink href="/add-product" className="bg-blue-600 text-white py-3 px-6 rounded-md hover:bg-blue-700 transition-colors duration-200">
             Add New Product
           </NavLink>
+           
         </div>
       </PageWraper>
     );
@@ -131,10 +132,13 @@ export default function MyProductsPage() {
           <NavLink href="/user/addProduct" className="bg-green-600 text-white py-2 px-4 rounded-md hover:bg-green-700 transition-colors duration-200">
             Add Product
           </NavLink>
+          <NavLink href={`/user/products_sold/${user?.userId}`} className="bg-blue-600 text-white py-3 px-6 rounded-md hover:bg-blue-700 transition-colors duration-200">
+            My sells
+          </NavLink>
         </div>
 
         {/* Product Grid */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+        <div className="flex flex-wrap justify-center gap-4">
           {allProducts.map((product) => (
             <ProductCard key={product.id} product={product} showActions={true} />
           ))}
