@@ -15,7 +15,7 @@ interface AllProductsClientWrapperProps {
 
 const PRODUCTS_PER_PAGE = 12; // Keep consistent with the Server Action
 
-const AllProductsClientWrapper: React.FC<AllProductsClientWrapperProps> = ({
+const  AllProductsClientWrapper: React.FC<AllProductsClientWrapperProps> = ({
   initialProducts,
   initialHasMore,
 }) => {
@@ -121,7 +121,7 @@ const AllProductsClientWrapper: React.FC<AllProductsClientWrapperProps> = ({
 
   return (
     <>
-      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+      <div className="flex flex-wrap items-center justify-center  gap-6">
         {allProducts.map((product) => (
           <ProductCard key={product.id} product={product} />
         ))}

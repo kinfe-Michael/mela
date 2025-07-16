@@ -1,6 +1,6 @@
 import { db } from './db'; // Assuming your Drizzle client is exported from here
-import {  products, orders, orderItems, orderStatusEnum } from '../db/schema';
-import { eq, and } from 'drizzle-orm';
+import {  products, orders, orderItems, orderStatusEnum,reviews } from '../db/schema';
+import { eq, and, InferSelectModel, sql, InferInsertModel, or } from 'drizzle-orm';
 
 interface PaginationOptions {
   limit?: number;
@@ -154,4 +154,91 @@ export async function cancelOrder(orderId: string) {
 
     return cancelledOrder;
   });
+}
+
+interface SellerOrderedProduct {
+  product: InferSelectModel<typeof products>;
+  totalOrderedQuantity: number;
+}
+
+export async function getSellerOrderedProducts(sellerId: string, options?: PaginationOptions): Promise<SellerOrderedProduct[]> {
+  try {
+    const orderedProducts = await db
+      .select({
+        product: products,
+        totalOrderedQuantity: sql<number>`sum(${orderItems.quantity})`.as('totalOrderedQuantity'),
+      })
+      .from(products)
+      .innerJoin(orderItems, eq(products.id, orderItems.productId))
+      .innerJoin(orders, eq(orderItems.orderId, orders.id))
+      .where(
+        eq(products.sellerId, sellerId),
+      )
+      .groupBy(products.id)
+      // .limit(options?.limit)
+      // .offset(options?.offset);
+      console.log("orderedProducts")
+      console.log("orderedProducts")
+      console.log("orderedProducts")
+      console.log(orderedProducts)
+      console.log(orderedProducts)
+      console.log(orderedProducts)
+      console.log("orderedProducts")
+      console.log("orderedProducts")
+      console.log("orderedProducts")
+    return orderedProducts;
+  } catch (error) {
+    console.error("Error fetching seller's ordered products:", error);
+    throw error;
+  }
+}
+
+// ===========================================
+// NEW: Functions for Reviews and Ratings
+// ===========================================
+
+export async function addProductReview(
+  reviewData: Omit<InferInsertModel<typeof reviews>, 'id' | 'createdAt'>
+) {
+  try {
+    const [newReview] = await db.insert(reviews).values(reviewData).returning();
+    return newReview;
+  } catch (error) {
+    console.error("Error adding product review:", error);
+    throw error;
+  }
+}
+
+export async function getReviewsByProductId(productId: string, options?: PaginationOptions) {
+  return db.query.reviews.findMany({
+    where: eq(reviews.productId, productId),
+    with: {
+      user: {
+        columns: {
+          id: true,
+          userName: true,
+        },
+      },
+    },
+    limit: options?.limit,
+    offset: options?.offset,
+    orderBy: (reviews, { desc }) => [desc(reviews.createdAt)],
+  });
+}
+
+export async function getAverageRatingForProduct(productId: string) {
+  try {
+    const result = await db
+      .select({
+        averageRating: sql<number>`avg(${reviews.rating})`.as('averageRating'),
+      })
+      .from(reviews)
+      .where(eq(reviews.productId, productId));
+
+    // The result will be an array, and the averageRating might be null if no reviews
+    return result[0]?.averageRating || 0;
+  } catch (error) {
+    console.error("Error calculating average rating:", error);
+    return 0; // Return 0 or handle error appropriately
+  }
 }

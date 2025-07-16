@@ -79,7 +79,7 @@ const ProductCard: React.FC<ProductCardProps> = ({ product, showActions = false 
     <>
       {/* Wrap the entire card in a NavLink component to make it clickable */}
      
-      <div>
+      <div className=' max-w-min flex flex-col items-center '>
          <NavLink href={productDetailHref} passHref className="block">
         <div className="bg-white flex flex-col items-center w-64 p-1 rounded-lg shadow-md overflow-hidden hover:shadow-lg transition-shadow duration-200">
           {/* Using Next.js Image component for optimization */}
@@ -113,7 +113,7 @@ const ProductCard: React.FC<ProductCardProps> = ({ product, showActions = false 
         </div>
       </NavLink>
              {showActions && (
-              <div className="mt-4 flex justify-center space-x-2 w-full">
+              <div className="mt-4  max-w-min flex justify-center space-x-2 w-full">
                 <NavLink href={`/products/edit/${product.id}`} passHref>
                   <button
                     className="text-sm bg-indigo-500 hover:bg-indigo-600 text-white py-1 px-3 rounded-md transition-colors duration-200"

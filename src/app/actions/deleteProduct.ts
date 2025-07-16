@@ -13,9 +13,9 @@ type ProductUpdateData = Partial<Omit<InferInsertModel<typeof products>, 'id' | 
 export async function updateProductAction(productId: string, formData: FormData) {
   const name = formData.get('name') as string;
   const description = formData.get('description') as string | null;
-  const price = formData.get('price') as string; // Drizzle numeric type is string
+  const price = formData.get('price') as string; 
   const quantity = parseInt(formData.get('quantity') as string);
-  const category = formData.get('category') as InferSelectModel<typeof products>['category']; // Ensure type safety for enum
+  const category = formData.get('category') as InferSelectModel<typeof products>['category']; 
   const imageUrl = formData.get('imageUrl') as string | null;
 
   if (!name || !price || isNaN(quantity) || !category) {

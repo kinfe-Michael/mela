@@ -28,8 +28,6 @@ export async function fetchAllProducts(
     const hasMore = fetchedProducts.length > PRODUCTS_PER_PAGE;
     const productsToSend = hasMore ? fetchedProducts.slice(0, PRODUCTS_PER_PAGE) : fetchedProducts;
 
-    // IMPORTANT: Convert any BigInt or specific Drizzle types if necessary
-    // Drizzle's numeric type maps to string, so price is already string
     const serializableProducts = productsToSend.map(p => ({
         ...p,
         // If you had BigInt for IDs or numbers, convert them:
