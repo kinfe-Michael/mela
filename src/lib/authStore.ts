@@ -1,4 +1,5 @@
 import { create } from 'zustand';
+import { persist, createJSONStorage } from 'zustand/middleware';
 
 interface User {
   userId: string;
@@ -14,7 +15,9 @@ interface AuthState {
   logout: () => Promise<void>;
 }
 
-export const useAuthStore = create<AuthState>((set) => ({
+export const useAuthStore = create<AuthState>()(
+   persist(
+    (set) => ({
   isLoggedIn: false,
   user: null,
   isLoading: true, 
@@ -53,4 +56,10 @@ export const useAuthStore = create<AuthState>((set) => ({
       console.error('Error during logout:', error);
     }
   },
-}));
+}),
+ {
+      name: 'cart-data', 
+      storage: createJSONStorage(() => localStorage), 
+    }
+   )
+);

@@ -208,6 +208,29 @@ export async function addProductReview(
     throw error;
   }
 }
+export async function upsertProductReview(
+  reviewData: Omit<InferInsertModel<typeof reviews>, 'id' | 'createdAt' | 'updatedAt'>
+) {
+  try {
+    const [upsertedReview] = await db.insert(reviews).values(reviewData)
+      .onConflictDoUpdate({
+        // Specify the columns that form the unique constraint
+        target: [reviews.productId, reviews.userId],
+        // Specify what to update if a conflict occurs
+        set: {
+          rating: reviewData.rating, // Always update the rating
+          comment: reviewData.comment, // Update the comment
+          updatedAt: new Date(), // Update the timestamp
+        },
+      })
+      .returning();
+
+    return upsertedReview;
+  } catch (error) {
+    console.error("Error upserting product review:", error);
+    throw error;
+  }
+}
 
 export async function getReviewsByProductId(productId: string, options?: PaginationOptions) {
   return db.query.reviews.findMany({
@@ -222,18 +245,14 @@ export async function getReviewsByProductId(productId: string, options?: Paginat
     },
     limit: options?.limit,
     offset: options?.offset,
-    orderBy: (reviews, { desc }) => [desc(reviews.createdAt)],
+    orderBy: (reviews, { desc }) => [desc(reviews.createdAt)], // Order by creation date
   });
 }
 
 export async function getAverageRatingForProduct(productId: string) {
-  // console.log statements are for debugging and can be removed in production
-  console.log("productId from getAverageRatingForProduct:", productId);
-
   try {
     const result = await db
       .select({
-        // The AVG function will likely return a string for numeric types in Drizzle
         averageRating: sql<string>`avg(${reviews.rating})`.as('averageRating'),
       })
       .from(reviews)
@@ -241,16 +260,14 @@ export async function getAverageRatingForProduct(productId: string) {
 
     const avgRatingString = result[0]?.averageRating;
 
-    // Parse the string to a floating-point number
     if (avgRatingString !== undefined && avgRatingString !== null) {
       const parsedRating = parseFloat(avgRatingString);
-      // Ensure it's a valid number, otherwise return 0
       return isNaN(parsedRating) ? 0 : parsedRating;
     }
 
-    return 0; // Return 0 if no reviews or averageRating is null/undefined
+    return 0;
   } catch (error) {
     console.error("Error calculating average rating:", error);
-    return 0; // Return 0 or handle error appropriately
+    return 0;
   }
 }

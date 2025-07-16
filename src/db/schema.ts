@@ -1,5 +1,5 @@
 // db/schema.ts
-import { pgTable, uuid, varchar, text, numeric, integer, timestamp, pgEnum, serial } from "drizzle-orm/pg-core" // Added serial for auto-incrementing review IDs
+import { pgTable, uuid, varchar, text, numeric, integer, timestamp, pgEnum, uniqueIndex } from "drizzle-orm/pg-core" // Added uniqueIndex
 import { relations } from "drizzle-orm"
 
 export const orderStatusEnum = pgEnum('order_status', ['pending', 'completed', 'shipped', 'cancelled'])
@@ -59,19 +59,26 @@ export const orderItems = pgTable('order_items', {
 
 // New: Reviews table
 export const reviews = pgTable('reviews', {
-  id: uuid('id').primaryKey().defaultRandom(), // Using uuid for consistency, or serial('id').primaryKey() for auto-incrementing integers
+  id: uuid('id').primaryKey().defaultRandom(),
   productId: uuid('product_id').notNull().references(() => products.id, { onDelete: 'cascade' }),
   userId: uuid('user_id').notNull().references(() => users.id, { onDelete: 'cascade' }),
   rating: integer('rating').notNull(),
   comment: text('comment'),
   createdAt: timestamp('created_at').notNull().defaultNow(),
+  // Add an updatedAt timestamp for reviews to track when they were last modified
+  updatedAt: timestamp('updated_at').notNull().defaultNow().$onUpdateFn(() => new Date()),
+}, (table) => {
+  return {
+    // This unique index ensures a user can only have one review per product
+    productUserUnique: uniqueIndex('product_user_idx').on(table.productId, table.userId),
+  };
 });
 
 
 export const userRelations = relations(users, ({ many }) => ({
   products: many(products),
   orders: many(orders),
-  reviews: many(reviews), // New: User can have many reviews
+  reviews: many(reviews),
 }))
 
 export const productRelations = relations(products, ({ one, many }) => ({
@@ -80,7 +87,7 @@ export const productRelations = relations(products, ({ one, many }) => ({
     references: [users.id]
   }),
   orderItems: many(orderItems),
-  reviews: many(reviews), // New: Product can have many reviews
+  reviews: many(reviews),
 }))
 
 export const orderRelations = relations(orders, ({ one, many }) => ({

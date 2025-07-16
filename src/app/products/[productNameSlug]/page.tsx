@@ -21,15 +21,15 @@ type ProductType = InferSelectModel<typeof products>;
 
 // The main page component is an async Server Component
 export default async function ProductDetailPage({ params, searchParams }: {
-  params: {
-    productNameSlug: string;
-  };
-  searchParams: {
-    id: string | undefined;
-  };
+  params: Promise < {
+    productNameSlug: string
+  } >;
+  searchParams: Promise < {
+    id: string
+  } >;
 }) {
-  const { productNameSlug } = params;
-  const { id: productId } = searchParams; // Renamed 'id' to 'productId' for clarity
+  const { productNameSlug } = await params;
+  const { id: productId } =await searchParams; // Renamed 'id' to 'productId' for clarity
 
   if (!productId) {
     notFound();
@@ -70,15 +70,23 @@ export default async function ProductDetailPage({ params, searchParams }: {
   );
 }
 
-// Optional: Generate dynamic metadata for SEO
+
 export async function generateMetadata({ params, searchParams }: {
-  params: { productNameSlug: string };
-  searchParams: { id: string | undefined };
+  params: Promise < {
+    productNameSlug: string
+  } >;
+  searchParams:Promise < {
+    id: string
+  } >;
 }): Promise<Metadata> {
-  const productId = searchParams.id;
+const { id: productId } =await searchParams;
+
   if (!productId) {
     return { title: 'Product Not Found' };
   }
+  Promise < {
+    productNameSlug: string
+  } >
 
   const product = await getProductById(productId);
 
