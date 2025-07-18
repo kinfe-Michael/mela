@@ -1,32 +1,29 @@
-'use client'; // This directive marks the file as a Client Component
+'use client';
 
 import React, { useState } from 'react';
-import { useFormStatus } from 'react-dom'; // Hook for form status
-import { addReviewAction } from '@/app/actions/reviews'; // Adjust path
+import { useFormStatus } from 'react-dom';
+import { addReviewAction } from '@/app/actions/reviews';
 
 interface AddReviewFormProps {
   productId: string;
-  productNameSlug: string; // Used for revalidation path
+  productNameSlug: string;
 }
 
 export default function AddReviewForm({ productId, productNameSlug }: AddReviewFormProps) {
   const [rating, setRating] = useState(0);
   const [comment, setComment] = useState('');
   const [submissionStatus, setSubmissionStatus] = useState<{ success: boolean; message: string } | null>(null);
-  const { pending } = useFormStatus(); // Get pending state from the form
+  const { pending } = useFormStatus();
 
-  // Bind the server action to the form
   const addReviewWithProductId = addReviewAction.bind(null, productId);
 
   const handleSubmit = async (formData: FormData) => {
-    // Add productNameSlug to formData for revalidation path
     formData.append('productNameSlug', productNameSlug);
 
     const result = await addReviewWithProductId(formData);
     setSubmissionStatus(result);
 
     if (result.success) {
-      // Clear form on success
       setRating(0);
       setComment('');
     }
@@ -37,7 +34,6 @@ export default function AddReviewForm({ productId, productNameSlug }: AddReviewF
       <h2 className="text-2xl font-bold mb-4">Add Your Review</h2>
 
       <form action={handleSubmit} className="space-y-4">
-        {/* Rating Input */}
         <div>
           <label htmlFor="rating" className="block text-sm font-medium text-gray-700 mb-1">
             Rating:
@@ -51,7 +47,7 @@ export default function AddReviewForm({ productId, productNameSlug }: AddReviewF
                   value={star}
                   checked={rating === star}
                   onChange={() => setRating(star)}
-                  className="sr-only" // Hide default radio button
+                  className="sr-only"
                   required
                 />
                 <svg
@@ -66,7 +62,6 @@ export default function AddReviewForm({ productId, productNameSlug }: AddReviewF
           </div>
         </div>
 
-        {/* Comment Textarea */}
         <div>
           <label htmlFor="comment" className="block text-sm font-medium text-gray-700 mb-1">
             Comment (Optional):
@@ -82,16 +77,14 @@ export default function AddReviewForm({ productId, productNameSlug }: AddReviewF
           ></textarea>
         </div>
 
-        {/* Submission Button */}
         <button
           type="submit"
           className="w-full inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 disabled:opacity-50 disabled:cursor-not-allowed"
-          disabled={pending || rating === 0} // Disable if submitting or no rating selected
+          disabled={pending || rating === 0}
         >
           {pending ? 'Submitting...' : 'Submit Review'}
         </button>
 
-        {/* Submission Status Message */}
         {submissionStatus && (
           <p className={`mt-3 text-center ${submissionStatus.success ? 'text-green-600' : 'text-red-600'}`}>
             {submissionStatus.message}

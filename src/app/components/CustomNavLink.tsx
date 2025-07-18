@@ -1,4 +1,3 @@
-// components/NavLink.tsx
 "use client";
 
 import React from 'react';
@@ -17,11 +16,9 @@ const NavLink: React.FC<NavLinkProps> = ({ children, className, activeClassName,
   const isActive = pathname === href;
 
   const handleClick = (e: React.MouseEvent<HTMLAnchorElement>) => {
-    // Only start NProgress if it's an actual navigation to a different path
     if (pathname !== href) {
       NProgress.start();
     }
-    // Any other onClick logic can go here
     if (props.onClick) {
       props.onClick(e);
     }
