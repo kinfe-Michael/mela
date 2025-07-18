@@ -80,8 +80,8 @@ const useCartStore = create<CartState>()(
       },
     }),
     {
-      name: 'cart-data', // unique name for the storage key
-      storage: createJSONStorage(() => localStorage), // (optional) by default, 'localStorage' is used
+      name: 'cart-data', 
+      storage: createJSONStorage(() => localStorage), 
     }
   )
 );

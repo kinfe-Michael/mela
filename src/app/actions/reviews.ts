@@ -1,12 +1,11 @@
-// app/products/actions.ts
 'use server';
 
-import { upsertProductReview } from '@/util/orderUtil'; // <<< Changed from addProductReview
+import { upsertProductReview } from '@/util/orderUtil';
 import { revalidatePath } from 'next/cache';
 import { cookies } from 'next/headers';
 import jwt from 'jsonwebtoken';
 
-const JWT_SECRET = process.env.JWT_SECRET || 'your_super_secret_jwt_key'; // <<< REPLACE THIS IN PRODUCTION
+const JWT_SECRET = process.env.JWT_SECRET || 'your_super_secret_jwt_key';
 
 async function verifyAuthToken(token: string): Promise<string | null> {
   try {
@@ -19,7 +18,7 @@ async function verifyAuthToken(token: string): Promise<string | null> {
 }
 
 export async function addReviewAction(productId: string, formData: FormData) {
-  const cookieStore =await cookies(); // No need for await here, cookies() returns an instance directly
+  const cookieStore =await cookies();
   const authToken = cookieStore.get('auth_token')?.value;
 
   if (!authToken) {
@@ -48,7 +47,6 @@ export async function addReviewAction(productId: string, formData: FormData) {
   }
 
   try {
-    // Changed to upsertProductReview
     const upsertedReview = await upsertProductReview({
       productId,
       userId,

@@ -1,7 +1,6 @@
 
 import bcrypt from 'bcrypt';
  
-// Configuration for bcrypt
 const saltRounds = 10;
 
 export async function hashPassword(password: string): Promise<string> {

@@ -1,12 +1,10 @@
-// app/api/orders/route.ts
 import { NextResponse } from 'next/server';
-import { createOrder } from '@/util/orderUtil'; // Adjust the import path if needed
-import { verifyJwt } from '@/util/jwt'; // Import your JWT verification utility
-import { cookies } from 'next/headers'; // Import cookies from next/headers
+import { createOrder } from '@/util/orderUtil';
+import { verifyJwt } from '@/util/jwt';
+import { cookies } from 'next/headers';
 
 export async function POST(req: Request) {
   try {
-    // 1. Get the JWT from the httpOnly cookie
     const cookieStore =await cookies();
     const token = cookieStore.get('auth_token')?.value;
 
@@ -14,24 +12,22 @@ export async function POST(req: Request) {
       return NextResponse.json({ message: 'Authentication token not found.' }, { status: 401 });
     }
 
-    // 2. Verify the JWT
     const decodedToken = verifyJwt(token);
 
     if (!decodedToken || !decodedToken.userId) {
       return NextResponse.json({ message: 'Invalid or expired token.' }, { status: 401 });
     }
 
-    const userId = decodedToken.userId; // Get the userId from the decoded token
+    const userId = decodedToken.userId;
 
-    const { items } = await req.json(); // Expecting { items: [{ productId, quantity }] }
+    const { items } = await req.json();
 
     if (!items || !Array.isArray(items) || items.length === 0) {
       return NextResponse.json({ message: 'No items provided for the order.' }, { status: 400 });
     }
 
-    // Transform cart items to the format expected by createOrder
     const orderItems = items.map((item: any) => ({
-      productId: item.id, // Assuming item.id from cart matches productId in Drizzle
+      productId: item.id,
       quantity: item.quantity,
     }));
 

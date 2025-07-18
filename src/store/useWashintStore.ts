@@ -14,14 +14,4 @@ interface WashintStoreState {
 
 export default useWashintStore
 
-// export function isSearchBarOpen(){
-//     const isSearchBarOpen = useStore((state)=> state.isSearchBarOpen)
-//     return isSearchBarOpen
-// }
-// export function openSearchBar(){
-//     useStore((state)=> state.openSearchBar)
-// }
-// export function closeSearchBar(){
-//     useStore((state)=> state.closeSearchBar)
-// }
 
