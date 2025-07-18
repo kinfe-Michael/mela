@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from 'react'; // Removed useEffect
+import React, { useState } from 'react';
 import useCartStore from '@/store/useCartStore';
 import PageWraper from '../components/PageWraper';
 
@@ -26,7 +26,6 @@ const CartPage: React.FC = () => {
   const [orderError, setOrderError] = useState<string | null>(null);
   const [orderSuccess, setOrderSuccess] = useState<boolean>(false);
 
-  // No need for jwtToken state or useEffect here, as the cookie is handled automatically
 
   const handleOrderNow = async () => {
     if (cartItems.length === 0) {
@@ -34,7 +33,6 @@ const CartPage: React.FC = () => {
       return;
     }
 
-    // No direct JWT check needed here, the API will handle authentication check
 
     setIsOrdering(true);
     setOrderError(null);
@@ -45,7 +43,6 @@ alert
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
-          // No 'Authorization' header needed here because httpOnly cookie is sent automatically
         },
         body: JSON.stringify({ items: cartItems }),
       });
@@ -53,7 +50,6 @@ alert
       const data = await response.json();
 
       if (!response.ok) {
-        // Handle API errors (e.g., insufficient stock, authentication issues)
         throw new Error(data.message || 'Failed to place order.');
       }
 
@@ -62,11 +58,8 @@ alert
       clearCart();
     } catch (error: any) {
       setOrderError(error.message || 'An unexpected error occurred.');
-      // If the error is due to 401 Unauthorized, you might want to redirect to login
       if (error.message === 'Authentication token not found.' || error.message === 'Invalid or expired token.') {
         alert("You are not logged in or your session has expired. Please log in again.");
-        // Example: Redirect to login page
-        // window.location.href = '/login';
       }
       console.error("Error placing order:", error);
     } finally {
@@ -75,7 +68,7 @@ alert
   };
 
   return (
-    <PageWraper>
+    <PageWraper>☺
       <div className="min-h-screen bg-gray-100 py-8 px-4 sm:px-6 lg:px-8">
         <div className="container mx-auto max-w-4xl bg-white p-6 rounded-lg shadow-lg">
           <h1 className="text-3xl font-extrabold text-gray-900 text-center mb-8">Your Shopping Cart</h1>
@@ -113,25 +106,22 @@ alert
               <div className="space-y-6">
                 {cartItems.map((item) => (
                   <div key={item.id} className="flex items-center gap-4 py-4 border-b border-gray-200 last:border-b-0 flex-wrap">
-                    {/* Item Image */}
                     <div className="flex-shrink-0 w-20 h-20 rounded-md overflow-hidden">
                       <img
                         src={item.imageUrl}
                         alt={item.name}
                         className="object-cover w-full h-full"
                         onError={(e) => {
-                          e.currentTarget.src = "https://placehold.co/100x100/E0E0E0/808080?text=Item"; // Fallback
+                          e.currentTarget.src = "https://placehold.co/100x100/E0E0E0/808080?text=Item";
                         }}
                       />
                     </div>
 
-                    {/* Item Details */}
                     <div className="flex-grow min-w-[150px]">
                       <h2 className="text-lg font-semibold text-gray-800 line-clamp-2">{item.name}</h2>
                       <p className="text-gray-600 text-sm">${item.price.toFixed(2)}</p>
                     </div>
 
-                    {/* Quantity Controls */}
                     <div className="flex items-center gap-2 ml-auto">
                       <button
                         onClick={() => increaseQuantity(item.id)}
@@ -152,7 +142,6 @@ alert
                       </button>
                     </div>
 
-                    {/* Item Total and Remove Button */}
                     <div className="flex items-center gap-4 ml-auto md:ml-4">
                       <p className="text-lg font-semibold text-gray-900">${(item.price * item.quantity).toFixed(2)}</p>
                       <button
@@ -170,7 +159,6 @@ alert
                 ))}
               </div>
 
-              {/* Cart Summary and Actions */}
               <div className="mt-8 flex flex-col sm:flex-row justify-between items-center">
                 <button
                   onClick={clearCart}

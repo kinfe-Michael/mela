@@ -3,7 +3,6 @@ import PageWraper from '@/app/components/PageWraper';
 import { fetchAllProducts } from '@/app/actions/all-products'; // Import your Server Action
 import { Metadata } from 'next'; 
 import AllProductsClientWrapper from '@/app/components/AllProductsClientWrapper'; // Import the new client wrapper
-import { searchProducts } from '@/util/dbUtil';
 
 export const metadata: Metadata = {
   title: 'mela - Your Marketplace',
@@ -13,8 +12,8 @@ export const metadata: Metadata = {
 
 export default async function HomePage() {
   const PRODUCTS_PER_PAGE = 12; 
-
   const { products: initialProducts, hasMore: initialHasMore, error } = await fetchAllProducts(0);
+
 
   if (error) {
     return (

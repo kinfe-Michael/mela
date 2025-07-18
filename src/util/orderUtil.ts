@@ -1,4 +1,4 @@
-import { db } from './db'; // Assuming your Drizzle client is exported from here
+import { db } from './db';
 import {  products, orders, orderItems, orderStatusEnum,reviews } from '../db/schema';
 import { eq, and, InferSelectModel, sql, InferInsertModel, or } from 'drizzle-orm';
 
@@ -12,12 +12,10 @@ interface PaginationOptions {
 export async function createOrder(buyerId: string, items: { productId: string; quantity: number }[]) {
   return db.transaction(async (tx) => {
     let totalAmount = 0;
-    // We'll store the necessary data for order items after fetching product details
-    // to avoid re-fetching the product just for priceAtPurchase later.
     const collectedOrderItemsData: {
       productId: string;
       quantity: number;
-      priceAtPurchase: string; // Store as string to match schema numeric type
+      priceAtPurchase: string;
     }[] = [];
 
     for (const item of items) {
@@ -35,38 +33,32 @@ export async function createOrder(buyerId: string, items: { productId: string; q
       const priceAtPurchase = parseFloat(product.price);
       totalAmount += priceAtPurchase * item.quantity;
 
-      // Collect data needed for order items insertion
       collectedOrderItemsData.push({
         productId: item.productId,
         quantity: item.quantity,
-        priceAtPurchase: priceAtPurchase.toString(), // Store as string for numeric type
+        priceAtPurchase: priceAtPurchase.toString(),
       });
 
-      // Decrease product quantity within the same transaction
       await tx.update(products)
         .set({ quantity: product.quantity - item.quantity })
         .where(eq(products.id, product.id));
     }
 
-    // Insert the new order first to get its ID
     const [newOrder] = await tx.insert(orders).values({
       buyerId: buyerId,
-      totalAmount: totalAmount.toString(), // Store as string for numeric type
+      totalAmount: totalAmount.toString(),
       status: 'pending',
     }).returning();
 
     if (!newOrder) {
-      // This case should ideally not happen if insertion is successful
       throw new Error("Failed to create order.");
     }
 
-    // Prepare the final order items data with the obtained orderId
     const finalOrderItemsToInsert = collectedOrderItemsData.map(itemData => ({
       ...itemData,
       orderId: newOrder.id,
     }));
 
-    // Insert all order items
     await tx.insert(orderItems).values(finalOrderItemsToInsert);
 
     return newOrder;
@@ -80,7 +72,7 @@ export async function getOrderById(orderId: string) {
       buyer: true,
       orderItems: {
         with: {
-          product: true, // Assuming you add this relation to orderItemRelations
+          product: true,
         },
       },
     },
@@ -95,7 +87,7 @@ export async function getOrdersByBuyer(buyerId: string, options?: PaginationOpti
     with: {
       orderItems: {
         with: {
-          product: true, // Assuming you've added the product relation to orderItemRelations
+          product: true,
         },
       },
     },
@@ -107,7 +99,6 @@ export async function getOrdersByBuyer(buyerId: string, options?: PaginationOpti
 
 export async function updateOrderStatus(
   orderId: string,
-  // This is the correct way to get the union type from your pgEnum definition
   newStatus: typeof orderStatusEnum['enumValues'][number]
 ) {
   try {
@@ -138,11 +129,10 @@ export async function cancelOrder(orderId: string) {
         throw new Error(`Order ${orderId} cannot be cancelled as it is already ${orderToCancel.status}.`);
     }
 
-    // Revert product quantities
     for (const item of orderToCancel.orderItems) {
-      if (item.productId) { // Check if product ID is not null (due to onDelete: 'set null')
+      if (item.productId) {
         await tx.update(products)
-          .set({ quantity: (products.quantity as any) + item.quantity }) // Drizzle might need type casting for arithmetic operations
+          .set({ quantity: (products.quantity as any) + item.quantity })
           .where(eq(products.id, item.productId));
       }
     }
@@ -175,8 +165,6 @@ export async function getSellerOrderedProducts(sellerId: string, options?: Pagin
         eq(products.sellerId, sellerId),
       )
       .groupBy(products.id)
-      // .limit(options?.limit)
-      // .offset(options?.offset);
       console.log("orderedProducts")
       console.log("orderedProducts")
       console.log("orderedProducts")
@@ -193,9 +181,6 @@ export async function getSellerOrderedProducts(sellerId: string, options?: Pagin
   }
 }
 
-// ===========================================
-// NEW: Functions for Reviews and Ratings
-// ===========================================
 
 export async function addProductReview(
   reviewData: Omit<InferInsertModel<typeof reviews>, 'id' | 'createdAt'>
@@ -214,13 +199,11 @@ export async function upsertProductReview(
   try {
     const [upsertedReview] = await db.insert(reviews).values(reviewData)
       .onConflictDoUpdate({
-        // Specify the columns that form the unique constraint
         target: [reviews.productId, reviews.userId],
-        // Specify what to update if a conflict occurs
         set: {
-          rating: reviewData.rating, // Always update the rating
-          comment: reviewData.comment, // Update the comment
-          updatedAt: new Date(), // Update the timestamp
+          rating: reviewData.rating,
+          comment: reviewData.comment,
+          updatedAt: new Date(),
         },
       })
       .returning();
@@ -245,7 +228,7 @@ export async function getReviewsByProductId(productId: string, options?: Paginat
     },
     limit: options?.limit,
     offset: options?.offset,
-    orderBy: (reviews, { desc }) => [desc(reviews.createdAt)], // Order by creation date
+    orderBy: (reviews, { desc }) => [desc(reviews.createdAt)],
   });
 }
 
