@@ -1,25 +1,24 @@
 import React from "react";
-import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { cn } from "@/lib/utils";
-import { usePathname } from "next/navigation";
 import { ReactNode } from "react";
-import { CiSettings } from "react-icons/ci";
 import {
   HiCheckCircle,
-  HiClock,
-  HiDotsVertical,
-  HiHeart,
-  HiMicrophone,
-  HiMusicNote,
+
   HiSun,
-  HiViewList,
+  
 } from "react-icons/hi";
 import { HiLanguage, HiPlusCircle } from "react-icons/hi2";
 import { BiCart } from "react-icons/bi";
-function SidebarContent() {
-  function SideBarButtons({ children }: { children: ReactNode }) {
-    return <Button className="bg-white hover:bg-gray-200 text-black">{children}</Button>;
+import NavLink from "./CustomNavLink";
+import { Button } from "@/components/ui/button";
+import { useCustomRouter } from "@/hooks/useCustomRouter";
+function SidebarContent({setIsSheetOpen}:{setIsSheetOpen:Function}) {
+  function SideBarButtons({ children,to }: { children: ReactNode,to?:string }) {
+   const router = useCustomRouter()
+    return <Button onClick={()=>{
+      setIsSheetOpen(false)
+      router.push(to || "")
+    }}  className="bg-white gap-2 border-0  shadow-none p-0 m-2 flex hover:bg-gray-200 text-black">{children}</Button>;
   }
   function SideBarcard({
     title,
@@ -42,27 +41,24 @@ function SidebarContent() {
   return (
     <div className="flex bg-white text-sm flex-col gap-1">
       <SideBarcard title="Menu">
-        <SideBarButtons>
-          <HiSun />
+        <SideBarButtons to="/category">
+          <HiSun className="text-xl" />
           Catagory
-        </SideBarButtons>
-          <SideBarButtons>
-          <HiSun />
+        </SideBarButtons >
+          <SideBarButtons to="/user/products">
+          <HiSun className="text-xl" />
           My products
         </SideBarButtons>
-        <SideBarButtons>
-          <HiCheckCircle />
+        <SideBarButtons to="/">
+          <HiCheckCircle className="text-xl" />
           Products
         </SideBarButtons>
-        <SideBarButtons>
-          <BiCart/>
+        <SideBarButtons to="/cart">
+          <BiCart className="text-xl"/>
           Cart
         </SideBarButtons>
       
-        <SideBarButtons>
-          <CiSettings />
-          Settings
-        </SideBarButtons>
+        
       </SideBarcard>
    
    

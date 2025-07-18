@@ -1,6 +1,6 @@
 
 "use client";
-import React, { useState, useEffect, useRef, ChangeEvent, FocusEvent, MouseEvent } from "react"; // Import React specific types
+import React, { useState, useEffect, useRef, ChangeEvent, FocusEvent, MouseEvent } from "react";
 import { Button } from "@/components/ui/button";
 import { HiSparkles, HiViewList } from "react-icons/hi";
 import { HiMagnifyingGlass } from "react-icons/hi2";
@@ -25,7 +25,6 @@ function Header() {
         searchInputRef.current &&
         !searchInputRef.current.contains(event.target as Node)
       ) {
-        // setShowSearchResults(false);
         closeSearchBar()
       }
     }
@@ -37,18 +36,15 @@ function Header() {
   }, []);
 
   const handleFocus = (event: FocusEvent<HTMLInputElement>) => { 
-    // setShowSearchResults(true);
     openSearchBar()
   };
 
   const handleChange = (event: ChangeEvent<HTMLInputElement>) => { 
     setSearchTerm(event.target.value);
-    // setShowSearchResults(true);
     openSearchBar()
   };
 
   const handleCloseSearchResults = () => {
-    // setShowSearchResults(false);
     closeSearchBar()
     setSearchTerm("");
   };

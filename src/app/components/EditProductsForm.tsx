@@ -1,13 +1,11 @@
-// components/EditProductForm.tsx
 "use client";
 
 import React, { useState, useEffect, useTransition } from 'react';
 import { useRouter } from 'next/navigation';
 import { InferSelectModel } from 'drizzle-orm';
-import { products, productCategoryEnum } from '@/db/schema'; // Import your product schema and enum
-import { updateProductAction } from '@/app/actions/productAction'; // Import the Server Action
+import { products, productCategoryEnum } from '@/db/schema';
+import { updateProductAction } from '@/app/actions/productAction';
 
-// Assuming you have shadcn/ui components or similar for input, button, select
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import { Button } from '@/components/ui/button';
@@ -19,7 +17,6 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select';
-// import { useToast } from '@/components/ui/use-toast'; // Assuming you have a toast notification system
 
 interface EditProductFormProps {
   initialProduct: InferSelectModel<typeof products>;
@@ -27,19 +24,17 @@ interface EditProductFormProps {
 
 const EditProductForm: React.FC<EditProductFormProps> = ({ initialProduct }) => {
   const router = useRouter();
-//   const { toast } = useToast(); // Initialize toast
-  const [isPending, startTransition] = useTransition(); // For managing pending state of Server Action
+  const [isPending, startTransition] = useTransition();
 
   const [formData, setFormData] = useState({
     name: initialProduct.name,
     description: initialProduct.description || '',
-    price: initialProduct.price.toString(), // Convert numeric (string) to string for input
-    quantity: initialProduct.quantity.toString(), // Convert integer to string for input
+    price: initialProduct.price.toString(),
+    quantity: initialProduct.quantity.toString(),
     category: initialProduct.category,
     imageUrl: initialProduct.imageUrl || '',
   });
 
-  // Update form data if initialProduct changes (e.g., if navigating between edit pages)
   useEffect(() => {
     setFormData({
       name: initialProduct.name,
@@ -64,7 +59,7 @@ const EditProductForm: React.FC<EditProductFormProps> = ({ initialProduct }) => 
     e.preventDefault();
 
     startTransition(async () => {
-      const data = new FormData(e.currentTarget); // Create FormData from the form element
+      const data = new FormData(e.currentTarget);
 
       const result = await updateProductAction(initialProduct.id, data);
 

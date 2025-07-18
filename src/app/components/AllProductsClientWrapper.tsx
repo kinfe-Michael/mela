@@ -1,11 +1,10 @@
-// app/components/AllProductsClientWrapper.tsx
 "use client";
 
 import { useInfiniteQuery } from '@tanstack/react-query';
 import { useEffect, useRef } from 'react';
 import { Loader2 } from 'lucide-react';
 import ProductCard from '@/app/components/ProductCard';
-import { fetchAllProducts, Product } from '@/app/actions/all-products'; // Import for client-side fetching
+import { fetchAllProducts, Product } from '@/app/actions/all-products';
 import NavLink from './CustomNavLink';
 
 interface AllProductsClientWrapperProps {
@@ -13,7 +12,7 @@ interface AllProductsClientWrapperProps {
   initialHasMore: boolean;
 }
 
-const PRODUCTS_PER_PAGE = 12; // Keep consistent with the Server Action
+const PRODUCTS_PER_PAGE = 12;
 
 const  AllProductsClientWrapper: React.FC<AllProductsClientWrapperProps> = ({
   initialProducts,
@@ -26,53 +25,35 @@ const  AllProductsClientWrapper: React.FC<AllProductsClientWrapperProps> = ({
     fetchNextPage,
     hasNextPage,
     isFetchingNextPage,
-    isLoading, // This isLoading is for *subsequent* fetches if `initialData` is provided
+    isLoading,
     isError,
     error,
     isFetched,
   } = useInfiniteQuery({
     queryKey: ['allProducts'],
     queryFn: async ({ pageParam }) => {
-      // This will be called for subsequent fetches
       return fetchAllProducts(pageParam);
     },
-    initialPageParam: PRODUCTS_PER_PAGE, // Start next fetch from this offset
+    initialPageParam: PRODUCTS_PER_PAGE,
     getNextPageParam: (lastPage, allPages) => {
       if (!lastPage.hasMore) {
         return undefined;
       }
       return allPages.reduce((acc, page) => acc + page.products.length, 0);
     },
-    initialData: { // This is the key for SSR hydration!
+    initialData: {
       pages: [{ products: initialProducts, hasMore: initialHasMore }],
-      pageParams: [0], // Initial page was loaded at offset 0
+      pageParams: [0],
     },
-    // select: (data) => ({
-    //   ...data,
-    //   pages: data.pages.map(page => ({
-    //     ...page,
-    //     // Ensure BigInts are converted here if they somehow slipped through serialization
-    //     products: page.products.map(p => ({
-    //         ...p,
-    //         // Example: id: typeof p.id === 'bigint' ? p.id.toString() : p.id,
-    //         // Example: quantity: typeof p.quantity === 'bigint' ? Number(p.quantity) : p.quantity,
-    //     }))
-    //   }))
-    // }),
     staleTime: 5 * 60 * 1000,
     refetchOnWindowFocus: false,
   });
 
-  // Extract all products from pages, including the initial ones
   const allProducts: Product[] = data?.pages.flatMap((page) => page.products) || [];
   
-  // Use `isFetched` to determine if the query has completed its *first* fetch (after initialData is set)
-  // `isLoading` from useInfiniteQuery will be true only for subsequent fetches after initialData
   const hasLoadedInitialData = isFetched && initialProducts.length > 0;
   
-  // Intersection Observer for infinite scrolling
   useEffect(() => {
-    // Only set up observer if we have a target, can fetch next page, there IS a next page, and not already fetching
     if (!observerTarget.current || !fetchNextPage || !hasNextPage || isFetchingNextPage) {
       return;
     }
@@ -93,9 +74,8 @@ const  AllProductsClientWrapper: React.FC<AllProductsClientWrapperProps> = ({
         observer.unobserve(observerTarget.current);
       }
     };
-  }, [hasNextPage, isFetchingNextPage, fetchNextPage]); // Depend on relevant state for observer
+  }, [hasNextPage, isFetchingNextPage, fetchNextPage]);
 
-  // Conditional rendering for error and empty states
   if (isError) {
     return (
       <div className="flex flex-col items-center justify-center min-h-[40vh] text-red-600">
@@ -105,8 +85,6 @@ const  AllProductsClientWrapper: React.FC<AllProductsClientWrapperProps> = ({
     );
   }
 
-  // Display message if no products after all potential fetches are complete
-  // This check applies if initialProducts was empty and no more pages were found
   if (allProducts.length === 0 && !isLoading && !isFetchingNextPage) {
     return (
       <div className="flex flex-col items-center justify-center min-h-[40vh] text-gray-700">
@@ -127,7 +105,6 @@ const  AllProductsClientWrapper: React.FC<AllProductsClientWrapperProps> = ({
         ))}
       </div>
 
-      {/* Loading Indicator for subsequent fetches */}
       <div ref={observerTarget} className="h-10 flex justify-center items-center mt-8">
         {isFetchingNextPage && (
           <div className="text-gray-600 flex items-center">

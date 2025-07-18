@@ -38,7 +38,7 @@ function PhoneSidebar() {
             <h2 className="text-xs">kibrom@gmail.com</h2>
           </div>
        
-        <SidebarContent />
+        <SidebarContent setIsSheetOpen={setIsSheetOpen} />
         {!isLoggedIn &&<NavLink onClick={()=> setIsSheetOpen(false)} href={"/auth/login"} className="p-2 rounded-md text-center  px-2 text-xs bg-white text-black border mx-4 border-gray-300  md:block font-bold">
             Login
           </NavLink>
