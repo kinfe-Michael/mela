@@ -5,6 +5,7 @@ import { ScrollArea } from "@/components/ui/scroll-area";
 import { HiMagnifyingGlass } from 'react-icons/hi2';
 import { slugify } from '@/util/slugify';
 import NavLink from './CustomNavLink';
+import Image from 'next/image';
 
 
 interface SearchResultsOverlayProps {
@@ -62,7 +63,7 @@ export function SearchResultsOverlay({ searchTerm, onClose,setSearchTerm }: Sear
       "
     >
       <CardHeader className="pb-2 relative">
-        <CardTitle className="text-lg">Search Results for "{searchTerm}"</CardTitle>
+        <CardTitle className="text-lg">Search Results for {`"${searchTerm}"`}</CardTitle>
         <CardDescription className="text-gray-400">
           {searchTerm ? (
             `Showing ${searchResult.length} result(s).`
@@ -72,16 +73,13 @@ export function SearchResultsOverlay({ searchTerm, onClose,setSearchTerm }: Sear
         </CardDescription>
           <div
                 className="flex-grow  flex w-full justify-start md:hidden md:ml-10 lg:ml-40 relative"
-                // ref={searchContainerRef}
               >
                 <div className="bg-gradient-to-r w-full  gap-4 flex items-center border border-gray-400 rounded-full max-w-min px-4 h-10">
                   <HiMagnifyingGlass className="text-2xl font-bold" />
                   <input
-                    // ref={searchInputRef}
                     className="focus:outline-0 min-w-[200px] bg-transparent  placeholder-gray-500 w-full"
                     type="text"
                     placeholder="Search..."
-                    // onFocus={handleFocus}
                     onChange={handleChange}
                     value={searchTerm}
                   />
@@ -106,7 +104,7 @@ export function SearchResultsOverlay({ searchTerm, onClose,setSearchTerm }: Sear
                   key={item.id} 
                   className="p-3 flex items-center gap-4 hover:bg-gray-200 rounded-md cursor-pointer transition-colors duration-200"
                 >
-                  <img
+                  <Image
                     src={item.imageUrl}
                     alt="Result thumbnail"
                     className="w-12 h-12 object-cover rounded-md flex-shrink-0"
@@ -120,7 +118,7 @@ export function SearchResultsOverlay({ searchTerm, onClose,setSearchTerm }: Sear
             </ul>
           </ScrollArea>
         ) : (
-          <p className="text-gray-400 p-4">No results found for "{searchTerm}".</p>
+          <p className="text-gray-400 p-4">No results found for {`"${searchTerm}"`}.</p>
         )}
       </CardContent>
     </Card>

@@ -1,7 +1,6 @@
 "use client";
 import React, { useState } from "react";
-import { Home, Library, Search } from "lucide-react"; // Importing icons from lucide-react
-import { LucideIcon } from "lucide-react"; // Import the type for Lucide icons
+import { Home, Library, Search } from "lucide-react"; 
 import { openSearchBar } from "@/lib/searchStateOperation";
 import { BiCart } from "react-icons/bi";
 import { useCustomRouter } from "@/hooks/useCustomRouter";

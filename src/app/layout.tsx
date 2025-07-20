@@ -2,7 +2,6 @@
 import Header from "./components/header";
 // import Sidebar from "./components/sidebar"; // If you have a sidebar, integrate it later
 import "./globals.css";
-import BottomContainer from "./components/BottomContainer"; // If you have a fixed footer, integrate it later
 import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area"; // Still needed for your Scroller component, but not necessarily this root layout's structure
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { ReactQueryDevtools } from '@tanstack/react-query-devtools';

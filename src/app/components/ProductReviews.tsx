@@ -1,7 +1,6 @@
-import React from 'react';
-import { getReviewsByProductId, getAverageRatingForProduct } from '@/util/orderUtil'; // Adjust path
-import { InferSelectModel } from 'drizzle-orm';
 import { reviews, users } from '@/db/schema'; // Import necessary schemas for types
+import { getAverageRatingForProduct, getReviewsByProductId } from '@/util/orderUtil'; // Adjust path
+import { InferSelectModel } from 'drizzle-orm';
 
 // Define types for reviews and user data
 type ReviewType = InferSelectModel<typeof reviews> & {
@@ -57,7 +56,7 @@ export default async function ProductReviews({ productId }: ProductReviewsProps)
                   Rating: {review.rating}/5
                 </span>
               </div>
-              {review.comment && <p className="text-gray-700 text-sm mt-1">"{review.comment}"</p>}
+              {review.comment && <p className="text-gray-700 text-sm mt-1">{review.comment}</p>}
               <p className="text-xs text-gray-500 mt-1">
                 Reviewed on {new Date(review.createdAt).toLocaleDateString()}
               </p>

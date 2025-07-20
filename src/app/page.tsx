@@ -1,9 +1,9 @@
 
-import PageWraper from '@/app/components/PageWraper';
 import { fetchAllProducts } from '@/app/actions/all-products'; // Import your Server Action
-import { Metadata } from 'next'; 
 import AllProductsClientWrapper from '@/app/components/AllProductsClientWrapper'; // Import the new client wrapper
-
+import PageWraper from '@/app/components/PageWraper';
+import { Metadata } from 'next';
+export const dynamic = 'force-dynamic';
 export const metadata: Metadata = {
   title: 'mela - Your Marketplace',
   description: 'Browse a wide variety of products from different sellers. Find what you need!',
@@ -11,7 +11,6 @@ export const metadata: Metadata = {
 };
 
 export default async function HomePage() {
-  const PRODUCTS_PER_PAGE = 12; 
   const { products: initialProducts, hasMore: initialHasMore, error } = await fetchAllProducts(0);
 
 

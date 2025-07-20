@@ -1,6 +1,6 @@
-import { db } from './db'; 
-import { users, products, orders, orderItems, orderStatusEnum } from '../db/schema';
-import { eq,InferInsertModel,InferSelectModel, ilike,or,not,and } from 'drizzle-orm';
+import { and, eq, ilike, InferInsertModel, not, or } from 'drizzle-orm';
+import { products, users, } from '../db/schema';
+import { db } from './db';
 import { hashPassword } from './passwordHash';
 
 
@@ -61,11 +61,7 @@ export async function deleteUser(userId: string) {
   }
 }
 
-interface AddProductResult {
-  success: boolean;
-  product?: InferSelectModel<typeof products>; 
-  error?: string;
-}
+
 interface AddProductParams {
   name: string;
   description: string | null;

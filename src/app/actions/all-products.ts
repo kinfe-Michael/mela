@@ -31,7 +31,7 @@ export async function fetchAllProducts(
     }));
 
     return { products: serializableProducts, hasMore };
-  } catch (error: any) {
+  } catch (error:any) {
     console.error('Error fetching all products in Server Action:', error);
     return { products: [], hasMore: false, error: error.message || 'Failed to fetch products.' };
   }

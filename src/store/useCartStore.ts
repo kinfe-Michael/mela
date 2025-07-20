@@ -1,8 +1,6 @@
-// store/useCartStore.ts
 import { create } from 'zustand';
 import { persist, createJSONStorage } from 'zustand/middleware';
 
-// Define the CartItem interface
 export interface CartItem {
   id: string;
   name: string;
@@ -11,26 +9,24 @@ export interface CartItem {
   quantity: number;
 }
 
-// Define the Zustand store interface
 interface CartState {
   cartItems: CartItem[];
-  loading: boolean; // Indicates if cart data is being loaded (e.g., from local storage or API)
+  loading: boolean;
   setCartItems: (items: CartItem[]) => void;
   setLoading: (status: boolean) => void;
   increaseQuantity: (id: string) => void;
   decreaseQuantity: (id: string) => void;
-  addItem: (item: Omit<CartItem, 'quantity'>, quantity?: number) => void; // Add item to cart
+  addItem: (item: Omit<CartItem, 'quantity'>, quantity?: number) => void;
   removeItem: (id: string) => void;
   clearCart: () => void;
   calculateTotal: () => number;
 }
 
-// Create the Zustand store with persistence
 const useCartStore = create<CartState>()(
   persist(
     (set, get) => ({
       cartItems: [],
-      loading: true, // Default to true, assuming data will be loaded
+      loading: true,
 
       setCartItems: (items) => set({ cartItems: items }),
       setLoading: (status) => set({ loading: status }),
@@ -53,14 +49,12 @@ const useCartStore = create<CartState>()(
         set((state) => {
           const existingItem = state.cartItems.find((item) => item.id === itemToAdd.id);
           if (existingItem) {
-            // If item exists, increase its quantity
             return {
               cartItems: state.cartItems.map((item) =>
                 item.id === itemToAdd.id ? { ...item, quantity: item.quantity + quantity } : item
               ),
             };
           } else {
-            // If item does not exist, add it to the cart
             return {
               cartItems: [...state.cartItems, { ...itemToAdd, quantity }],
             };

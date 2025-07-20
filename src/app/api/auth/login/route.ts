@@ -1,5 +1,4 @@
 import { NextResponse } from "next/server";
-import {cookies} from 'next/headers';
 import jwt from 'jsonwebtoken';
 import { getUserPhoneNumber } from "@/util/dbUtil";
 import { verifyPassword } from "@/util/passwordHash";

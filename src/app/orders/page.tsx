@@ -1,7 +1,9 @@
 // app/orders/page.tsx (or pages/orders.tsx if you prefer the Pages Router)
 "use client"; // This component needs client-side interactivity (useState, useEffect)
 
-import React, { useState, useEffect } from 'react';
+import Image from 'next/image';
+import React, { useEffect, useState } from 'react';
+import NavLink from '../components/CustomNavLink';
 import PageWraper from '../components/PageWraper'; // Adjust path if necessary
 
 // Interfaces directly reflecting the data structure from your API route
@@ -121,11 +123,11 @@ const OrdersPage: React.FC = () => {
 
           {orders.length === 0 ? (
             <div className="text-center text-gray-600 text-lg py-10">
-              You haven't placed any orders yet.
+              {"You haven't placed any orders yet."}
               <br />
-              <a href="/" className="text-indigo-600 hover:underline mt-4 inline-block">
+              <NavLink href="/" className="text-indigo-600 hover:underline mt-4 inline-block">
                 Start Shopping
-              </a>
+              </NavLink>
             </div>
           ) : (
             <div className="space-y-6">
@@ -170,7 +172,7 @@ const OrdersPage: React.FC = () => {
                       <ul className="space-y-3">
                         {order.items.map((item) => (
                           <li key={item.productId} className="flex items-center gap-3">
-                            <img
+                            <Image
                               src={item.imageUrl}
                               alt={item.name}
                               className="w-16 h-16 object-cover rounded-md flex-shrink-0"

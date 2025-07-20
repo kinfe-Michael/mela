@@ -1,16 +1,12 @@
 "use client";
 
-import React, { useState } from 'react';
 import useCartStore from '@/store/useCartStore';
+import Image from 'next/image';
+import React, { useState } from 'react';
+import NavLink from '../components/CustomNavLink';
 import PageWraper from '../components/PageWraper';
 
-interface CartItem {
-  id: string;
-  name: string;
-  price: number;
-  imageUrl: string;
-  quantity: number;
-}
+
 
 const CartPage: React.FC = () => {
   const {
@@ -37,7 +33,7 @@ const CartPage: React.FC = () => {
     setIsOrdering(true);
     setOrderError(null);
     setOrderSuccess(false);
-alert
+
     try {
       const response = await fetch('/api/orders', {
         method: 'POST',
@@ -97,9 +93,9 @@ alert
             <div className="text-center text-gray-600 text-lg py-10">
               Your cart is empty. Start shopping to add items!
               <br />
-              <a href="/" className="text-indigo-600 hover:underline mt-4 inline-block">
+              <NavLink href="/" className="text-indigo-600 hover:underline mt-4 inline-block">
                 Go to Homepage
-              </a>
+              </NavLink>
             </div>
           ) : (
             <>
@@ -107,7 +103,7 @@ alert
                 {cartItems.map((item) => (
                   <div key={item.id} className="flex items-center gap-4 py-4 border-b border-gray-200 last:border-b-0 flex-wrap">
                     <div className="flex-shrink-0 w-20 h-20 rounded-md overflow-hidden">
-                      <img
+                      <Image
                         src={item.imageUrl}
                         alt={item.name}
                         className="object-cover w-full h-full"

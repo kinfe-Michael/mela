@@ -1,17 +1,17 @@
 "use client";
 
-import React, { useState } from 'react';
-import { useForm, Controller } from 'react-hook-form';
-import type { FieldValues } from 'react-hook-form';
 import { useRouter } from 'next/navigation'; // Import useRouter
+import { useState } from 'react';
+import type { FieldValues } from 'react-hook-form';
+import { Controller, useForm } from 'react-hook-form';
 
+import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import { Button } from '@/components/ui/button';
 
-import { AiOutlineGoogle, AiOutlineLock, AiOutlineUser, AiOutlineEye, AiOutlineEyeInvisible, AiOutlinePhone } from 'react-icons/ai';
 import { useAuthStore } from '@/lib/authStore';
+import { AiOutlineEye, AiOutlineEyeInvisible, AiOutlineGoogle, AiOutlineLock, AiOutlinePhone } from 'react-icons/ai';
 
 
 interface LoginFormInputs extends FieldValues {
@@ -188,7 +188,7 @@ export default function App() {
           </Button>
         </CardContent>
         <CardFooter className="flex justify-center text-sm text-gray-500">
-          Don't have an account? <a href="#" className="ml-1 text-blue-600 hover:underline">Sign Up</a>
+          {"Don't have an account?"} <a href="#" className="ml-1 text-blue-600 hover:underline">Sign Up</a>
         </CardFooter>
       </Card>
     </div>

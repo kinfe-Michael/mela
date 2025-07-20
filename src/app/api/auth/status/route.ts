@@ -1,6 +1,6 @@
-import { NextResponse } from 'next/server';
-import { cookies } from 'next/headers';
 import jwt from 'jsonwebtoken';
+import { cookies } from 'next/headers';
+import { NextResponse } from 'next/server';
 
 interface JwtPayload {
   userId: string;
@@ -9,7 +9,7 @@ interface JwtPayload {
 }
 
 
-export async function GET(req: Request) {
+export async function GET() {
   const cookieStore = await cookies();
   console.log(cookieStore)
   const token = cookieStore.get('auth_token')?.value;

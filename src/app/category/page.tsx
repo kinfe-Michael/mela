@@ -1,21 +1,17 @@
-// pages/index.tsx
 "use client";
 
 import React from 'react';
 import PageWraper from '../components/PageWraper';
-// Removed 'next/head', 'next/image', and 'next/link' imports due to compilation issues.
-// Using standard HTML elements for broader compatibility in this environment.
+import Image from 'next/image';
 
-// Define the Category interface directly in this file for self-containment
 interface Category {
   id: string;
   name: string;
-  imageUrl: string; // URL for the category image
-  slug: string; // Used for friendly URLs (e.g., /categories/electronics)
+  imageUrl: string;
+  slug: string;
   description?: string;
 }
 
-// Hardcoded mock data for 5 categories
 const staticCategories: Category[] = [
   {
     id: 'electronics',
@@ -58,8 +54,6 @@ const StaticCategoriesPage: React.FC = () => {
   return (
     <PageWraper>
         <div className="min-h-screen bg-gray-100 py-8">
-      {/* Replaced <Head> with a simple div or removed as it's not critical for sandbox display */}
-      {/* For SEO in a real Next.js app, you'd use <Head> */}
       <div className="container mx-auto px-4">
         <h1 className="text-4xl font-extrabold text-gray-900 text-center mb-10">
           Explore Our Categories
@@ -67,17 +61,15 @@ const StaticCategoriesPage: React.FC = () => {
 
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-3 xl:grid-cols-5 gap-6">
           {staticCategories.map((category) => (
-            // Replaced <Link> with <a> tag for direct navigation
             <a key={category.id} href={`/categories/${category.slug}`} className="block group">
               <div className="bg-white rounded-lg shadow-md hover:shadow-xl transition-shadow duration-300 overflow-hidden h-full flex flex-col">
                 <div className="relative w-full h-48 sm:h-56 md:h-64 overflow-hidden">
-                  {/* Replaced <Image> with <img> tag for direct image display */}
-                  <img
+                  <Image
                     src={category.imageUrl}
                     alt={category.name}
                     className="object-cover w-full h-full transition-transform duration-300 group-hover:scale-105 rounded-md"
                     onError={(e) => {
-                      e.currentTarget.src = "https://placehold.co/400x400/E0E0E0/808080?text=Category"; // Fallback image
+                      e.currentTarget.src = "https://placehold.co/400x400/E0E0E0/808080?text=Category";
                     }}
                   />
                 </div>
