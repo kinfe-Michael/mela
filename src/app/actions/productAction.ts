@@ -1,10 +1,9 @@
 "use server"; 
 
-import { revalidatePath } from 'next/cache'; 
-import { redirect } from 'next/navigation'; 
-import { updateProduct } from '@/util/dbUtil'; 
+import { products } from '@/db/schema';
+import { updateProduct } from '@/util/dbUtil';
 import { InferInsertModel, InferSelectModel } from 'drizzle-orm';
-import { products } from '@/db/schema'; 
+import { revalidatePath } from 'next/cache';
 
 type ProductUpdateData = Partial<Omit<InferInsertModel<typeof products>, 'id' | 'createdAt' | 'updatedAt'>>;
 
@@ -46,14 +45,4 @@ export async function updateProductAction(productId: string, formData: FormData)
   }
 }
 
-function slugify(text: string): string {
-  return text
-    .toString()
-    .normalize('NFD')
-    .replace(/[\u0300-\u036f]/g, '')
-    .toLowerCase()
-    .trim()
-    .replace(/\s+/g, '-')
-    .replace(/[^\w-]+/g, '')
-    .replace(/--+/g, '-');
-}
+

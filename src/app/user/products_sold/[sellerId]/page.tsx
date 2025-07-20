@@ -1,8 +1,7 @@
 // app/seller/[sellerId]/products-sold/page.tsx
-import { getSellerOrderedProducts, getAverageRatingForProduct, getReviewsByProductId } from '@/util/orderUtil'; // Adjust path if you put functions in a different file
-import { InferSelectModel } from 'drizzle-orm';
 import { products } from '@/db/schema'; // Import products schema for type inference
-import Link from 'next/link';
+import { getAverageRatingForProduct, getReviewsByProductId, getSellerOrderedProducts } from '@/util/orderUtil'; // Adjust path if you put functions in a different file
+import { InferSelectModel } from 'drizzle-orm';
 
 // Define a type for the data fetched for each product, including reviews and average rating
 type ProductWithDetails = InferSelectModel<typeof products> & {
@@ -91,7 +90,7 @@ export default async function SellerProductsSoldPage({ params }: SellerProductsS
                         <p className="text-sm font-medium text-gray-800">
                           {review.user?.userName || 'Anonymous'} - Rating: {review.rating}/5
                         </p>
-                        {review.comment && <p className="text-sm text-gray-600 mt-1">"{review.comment}"</p>}
+                        {review.comment && <p className="text-sm text-gray-600 mt-1">{review.comment}</p>}
                       </div>
                     ))}
                   </div>

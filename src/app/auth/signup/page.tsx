@@ -1,16 +1,15 @@
 "use client";
-import React, { useState } from 'react';
-import { useForm, Controller } from 'react-hook-form';
-import type { FieldValues } from 'react-hook-form';
+import { useActionState, useState } from 'react';
 import { useFormStatus } from 'react-dom';
-import { useActionState } from 'react';
+import type { FieldValues } from 'react-hook-form';
+import { Controller, useForm } from 'react-hook-form';
 
+import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import { Button } from '@/components/ui/button';
 
-import { AiOutlineGoogle, AiOutlineLock, AiOutlineUser, AiOutlineEye, AiOutlineEyeInvisible, AiOutlinePhone } from 'react-icons/ai'; // Removed AiOutlineMail
+import { AiOutlineEye, AiOutlineEyeInvisible, AiOutlineGoogle, AiOutlineLock, AiOutlinePhone, AiOutlineUser } from 'react-icons/ai'; // Removed AiOutlineMail
 
 import { signupAction } from './signUpAction'; // Import the server action
 
@@ -42,7 +41,7 @@ function SubmitButton() {
 export default function App() {
   const [showPassword, setShowPassword] = useState<boolean>(false);
 
-  const { control, handleSubmit, formState: { errors } } = useForm<SignupFormInputs>({
+  const { control, formState: { errors } } = useForm<SignupFormInputs>({
     defaultValues: {
       username: '',
       phoneNumber: '',

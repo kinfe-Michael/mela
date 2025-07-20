@@ -113,7 +113,7 @@ export default function MyProductsPage() {
     return (
       <PageWraper>
         <div className="flex flex-col items-center justify-center min-h-screen text-gray-700">
-          <h2 className="text-2xl font-semibold mb-4">You haven't posted any products yet!</h2>
+          <h2 className="text-2xl font-semibold mb-4">{"You haven't posted any products yet!"}</h2>
           <p className="text-lg mb-6">Start selling by adding your first product.</p>
           <NavLink href="/add-product" className="bg-blue-600 text-white py-3 px-6 rounded-md hover:bg-blue-700 transition-colors duration-200">
             Add New Product
@@ -157,7 +157,7 @@ export default function MyProductsPage() {
             </div>
           )}
           {!hasNextPage && allProducts.length > 0 && !isFetchingNextPage && (
-            <p className="text-gray-500">You've reached the end of your products list.</p>
+            <p className="text-gray-500">{"You've reached the end of your products list."}</p>
           )}
         </div>
       </div>

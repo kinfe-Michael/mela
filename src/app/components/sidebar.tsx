@@ -1,7 +1,6 @@
 "use client";
 import { cn } from "@/lib/utils";
 
-import SidebarContent from "./SidebarContent";
 function Sidebar() {
   return (
     <aside

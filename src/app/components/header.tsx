@@ -1,18 +1,17 @@
 
 "use client";
-import React, { useState, useEffect, useRef, ChangeEvent, FocusEvent, MouseEvent } from "react";
 import { Button } from "@/components/ui/button";
-import { HiSparkles, HiViewList } from "react-icons/hi";
+import { useAuthStore } from "@/lib/authStore";
+import { closeSearchBar, openSearchBar } from "@/lib/searchStateOperation";
+import useWashintStore from "@/store/useWashintStore";
+import { ChangeEvent, MouseEvent, useEffect, useRef, useState } from "react";
+import { HiSparkles } from "react-icons/hi";
 import { HiMagnifyingGlass } from "react-icons/hi2";
+import NavLink from "./CustomNavLink";
 import PhoneSidebar from "./PhoneSidebar";
 import { SearchResultsOverlay } from "./SearchResultsOverlay";
-import useWashintStore from "@/store/useWashintStore";
-import { openSearchBar,closeSearchBar } from "@/lib/searchStateOperation";
-import { useAuthStore } from "@/lib/authStore";
-import NavLink from "./CustomNavLink";
 function Header() {
-  const {isLoading,isLoggedIn,logout} = useAuthStore((state)=> state)
-  const [showSearchResults, setShowSearchResults] = useState<boolean>(false); 
+  const {isLoggedIn,logout} = useAuthStore((state)=> state)
   const [searchTerm, setSearchTerm] = useState<string>(""); 
   const searchInputRef = useRef<HTMLInputElement>(null); 
   const searchContainerRef = useRef<HTMLDivElement>(null); 
@@ -35,7 +34,7 @@ function Header() {
     };
   }, []);
 
-  const handleFocus = (event: FocusEvent<HTMLInputElement>) => { 
+  const handleFocus = () => { 
     openSearchBar()
   };
 

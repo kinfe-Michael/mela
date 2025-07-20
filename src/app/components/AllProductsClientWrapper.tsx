@@ -1,10 +1,10 @@
 "use client";
 
-import { useInfiniteQuery } from '@tanstack/react-query';
-import { useEffect, useRef } from 'react';
-import { Loader2 } from 'lucide-react';
-import ProductCard from '@/app/components/ProductCard';
 import { fetchAllProducts, Product } from '@/app/actions/all-products';
+import ProductCard from '@/app/components/ProductCard';
+import { useInfiniteQuery } from '@tanstack/react-query';
+import { Loader2 } from 'lucide-react';
+import { useEffect, useRef } from 'react';
 import NavLink from './CustomNavLink';
 
 interface AllProductsClientWrapperProps {
@@ -28,7 +28,6 @@ const  AllProductsClientWrapper: React.FC<AllProductsClientWrapperProps> = ({
     isLoading,
     isError,
     error,
-    isFetched,
   } = useInfiniteQuery({
     queryKey: ['allProducts'],
     queryFn: async ({ pageParam }) => {
@@ -51,7 +50,6 @@ const  AllProductsClientWrapper: React.FC<AllProductsClientWrapperProps> = ({
 
   const allProducts: Product[] = data?.pages.flatMap((page) => page.products) || [];
   
-  const hasLoadedInitialData = isFetched && initialProducts.length > 0;
   
   useEffect(() => {
     if (!observerTarget.current || !fetchNextPage || !hasNextPage || isFetchingNextPage) {
@@ -112,7 +110,7 @@ const  AllProductsClientWrapper: React.FC<AllProductsClientWrapperProps> = ({
           </div>
         )}
         {!hasNextPage && allProducts.length > 0 && !isFetchingNextPage && (
-          <p className="text-gray-500">You've reached the end of the products list.</p>
+          <p className="text-gray-500">{"You've reached the end of the products list."}</p>
         )}
       </div>
     </>

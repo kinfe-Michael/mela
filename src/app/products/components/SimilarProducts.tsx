@@ -1,21 +1,17 @@
-// components/SimilarProducts.tsx
-"use client"; // This component needs to be a Client Component
+"use client";
 
+import { products } from '@/db/schema';
+import { InferSelectModel } from 'drizzle-orm';
 import React from 'react';
-import ProductCard from '../../components/ProductCard'; // Import the ProductCard component
-import { InferSelectModel } from 'drizzle-orm'; // Import for type safety
-import { products } from '@/db/schema'; // Import your Drizzle schema for 'products' type
-import { slugify } from '@/util/slugify'; // Import the slugify utility
+import ProductCard from '../../components/ProductCard';
 
-// Define the props interface for SimilarProducts
 interface SimilarProductsProps {
-  // products prop is now typed directly from your Drizzle schema
   products: InferSelectModel<typeof products>[];
 }
 
 const SimilarProducts: React.FC<SimilarProductsProps> = ({ products }) => {
   if (!products || products.length === 0) {
-    return null; // Don't render anything if no similar products
+    return null;
   }
 
   return (

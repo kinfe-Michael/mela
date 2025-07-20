@@ -1,22 +1,20 @@
 "use client"
-import React, { useState } from "react";
-import { HiViewList } from "react-icons/hi";
+import { Button } from "@/components/ui/button";
 import {
   Sheet,
   SheetContent,
-  SheetDescription,
   SheetHeader,
   SheetTitle,
-  SheetTrigger,
+  SheetTrigger
 } from "@/components/ui/sheet";
-import SidebarContent from "./SidebarContent";
-import Image from "next/image";
-import { Button } from "@/components/ui/button";
 import { useAuthStore } from "@/lib/authStore";
+import { useState } from "react";
+import { HiViewList } from "react-icons/hi";
 import NavLink from "./CustomNavLink";
+import SidebarContent from "./SidebarContent";
 function PhoneSidebar() {
   const [isSheetOpen, setIsSheetOpen] = useState(false);
-  const {isLoading,isLoggedIn,logout} = useAuthStore((state)=>state)
+  const {isLoggedIn,logout} = useAuthStore((state)=>state)
   return (
     <Sheet onOpenChange={setIsSheetOpen} open={isSheetOpen}>
       <SheetTrigger asChild>

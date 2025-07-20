@@ -8,8 +8,8 @@ interface WashintStoreState {
 }
  const useWashintStore = create<WashintStoreState>((set) => ({
     isSearchBarOpen: false,  
-    openSearchBar: ()=> set((state) => ({isSearchBarOpen:true})),
-    closeSearchBar: ()=> set((state) => ({isSearchBarOpen:false})),
+    openSearchBar: ()=> set(() => ({isSearchBarOpen:true})),
+    closeSearchBar: ()=> set(() => ({isSearchBarOpen:false})),
 }))
 
 export default useWashintStore

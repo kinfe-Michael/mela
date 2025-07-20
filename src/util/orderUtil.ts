@@ -1,6 +1,6 @@
+import { eq, InferInsertModel, InferSelectModel, sql } from 'drizzle-orm';
+import { orderItems, orders, orderStatusEnum, products, reviews } from '../db/schema';
 import { db } from './db';
-import {  products, orders, orderItems, orderStatusEnum,reviews } from '../db/schema';
-import { eq, and, InferSelectModel, sql, InferInsertModel, or } from 'drizzle-orm';
 
 interface PaginationOptions {
   limit?: number;
@@ -151,7 +151,7 @@ interface SellerOrderedProduct {
   totalOrderedQuantity: number;
 }
 
-export async function getSellerOrderedProducts(sellerId: string, options?: PaginationOptions): Promise<SellerOrderedProduct[]> {
+export async function getSellerOrderedProducts(sellerId: string,): Promise<SellerOrderedProduct[]> {
   try {
     const orderedProducts = await db
       .select({
@@ -165,15 +165,7 @@ export async function getSellerOrderedProducts(sellerId: string, options?: Pagin
         eq(products.sellerId, sellerId),
       )
       .groupBy(products.id)
-      console.log("orderedProducts")
-      console.log("orderedProducts")
-      console.log("orderedProducts")
-      console.log(orderedProducts)
-      console.log(orderedProducts)
-      console.log(orderedProducts)
-      console.log("orderedProducts")
-      console.log("orderedProducts")
-      console.log("orderedProducts")
+      
     return orderedProducts;
   } catch (error) {
     console.error("Error fetching seller's ordered products:", error);

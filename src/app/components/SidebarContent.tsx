@@ -7,12 +7,10 @@ import {
   HiSun,
   
 } from "react-icons/hi";
-import { HiLanguage, HiPlusCircle } from "react-icons/hi2";
 import { BiCart } from "react-icons/bi";
-import NavLink from "./CustomNavLink";
 import { Button } from "@/components/ui/button";
 import { useCustomRouter } from "@/hooks/useCustomRouter";
-function SidebarContent({setIsSheetOpen}:{setIsSheetOpen:Function}) {
+function SidebarContent(setIsSheetOpen:any) {
   function SideBarButtons({ children,to }: { children: ReactNode,to?:string }) {
    const router = useCustomRouter()
     return <Button onClick={()=>{

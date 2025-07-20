@@ -1,5 +1,4 @@
 import { PropsWithChildren } from "react";
-import Sidebar from "./sidebar";
 import BottomContainer from "./BottomContainer";
 
 function PageWraper(props: PropsWithChildren) {
