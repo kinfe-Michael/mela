@@ -6,7 +6,7 @@ This is a Consumer-to-Consumer (C2C) marketplace application.
 
 ---
 
-## 🚀 Getting Started
+
 
 Follow these steps to set up and run the project on your local machine.
 
@@ -37,12 +37,10 @@ Before you begin, ensure you have the following installed:
 
 3.  **Database Setup**
 
-    Create a PostgreSQL database named `mela`.
-
-    ```sql
-    CREATE DATABASE mela;
-    ```
-    (You might need to connect to your PostgreSQL server first, e.g., `psql -U your_username`)
+    Create a PostgreSQL database named `mela` in aws rds.
+    set the db publicly accessible.
+    download the global-bundle CA cert from aws docs and setup a ssl connection with drizle and pg.
+    retrive the connection details and add them to .env file.
 
 4.  **AWS IAM User Configuration**
 
