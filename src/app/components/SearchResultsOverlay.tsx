@@ -1,11 +1,11 @@
 
-import React, { ChangeEvent, useEffect, useState } from 'react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { ScrollArea } from "@/components/ui/scroll-area";
-import { HiMagnifyingGlass } from 'react-icons/hi2';
 import { slugify } from '@/util/slugify';
-import NavLink from './CustomNavLink';
 import Image from 'next/image';
+import { ChangeEvent, useEffect, useState } from 'react';
+import { HiMagnifyingGlass } from 'react-icons/hi2';
+import NavLink from './CustomNavLink';
 
 
 interface SearchResultsOverlayProps {
