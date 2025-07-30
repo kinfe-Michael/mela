@@ -1,7 +1,7 @@
-import { NextResponse } from "next/server";
-import jwt from 'jsonwebtoken';
 import { getUserPhoneNumber } from "@/util/dbUtil";
 import { verifyPassword } from "@/util/passwordHash";
+import jwt from 'jsonwebtoken';
+import { NextResponse } from "next/server";
  export async function POST(req:Request){
     const {phoneNumber,password} = await req.json();
     const phoneStripedOfCode = parseInt(phoneNumber,10)
@@ -15,7 +15,7 @@ import { verifyPassword } from "@/util/passwordHash";
     const response = NextResponse.json({isLoggedIn: true, user: {userId:user.id,username:user.userName}, message: 'Logged in successfully' });
   response.cookies.set('auth_token', token, {
     httpOnly: true,
-    secure: process.env.NODE_ENV === 'production',
+    secure: false,
     sameSite: 'lax',
     maxAge: 60 * 60,
     path: '/',
