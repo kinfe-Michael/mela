@@ -16,7 +16,7 @@ import { NextResponse } from "next/server";
   response.cookies.set('auth_token', token, {
     httpOnly: true,
     secure: false,
-    sameSite: 'lax',
+    sameSite: 'strict',
     maxAge: 60 * 60,
     path: '/',
   });
