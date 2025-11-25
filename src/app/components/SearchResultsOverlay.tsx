@@ -108,6 +108,8 @@ export function SearchResultsOverlay({ searchTerm, onClose,setSearchTerm }: Sear
                     src={item.imageUrl}
                     alt="Result thumbnail"
                     className="w-12 h-12 object-cover rounded-md flex-shrink-0"
+                    width={100}
+                    height={100}
                   />
                   <div className="flex-grow">
                     <p className="text-base font-semibold ">{item.name}</p>
