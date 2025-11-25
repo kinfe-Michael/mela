@@ -1,8 +1,8 @@
 "use client";
 
+import Image from 'next/image';
 import React from 'react';
 import PageWraper from '../components/PageWraper';
-import Image from 'next/image';
 
 interface Category {
   id: string;
@@ -67,6 +67,7 @@ const StaticCategoriesPage: React.FC = () => {
                   <Image
                     src={category.imageUrl}
                     alt={category.name}
+                    layout='fill'
                     className="object-cover w-full h-full transition-transform duration-300 group-hover:scale-105 rounded-md"
                     onError={(e) => {
                       e.currentTarget.src = "https://placehold.co/400x400/E0E0E0/808080?text=Category";

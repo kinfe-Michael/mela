@@ -3,7 +3,7 @@ import type { NextConfig } from "next";
 const nextConfig: NextConfig = {
   images: {
     domains: [
-      'mela-s3-storage.s3.eu-north-1.amazonaws.com',
+      'mela-1212.s3.eu-north-1.amazonaws.com',
       'placehold.co',
     ],
   },

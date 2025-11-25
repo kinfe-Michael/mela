@@ -10,13 +10,13 @@ import { NextResponse } from "next/server";
     if (!user || !await verifyPassword(password, user.passwordHash)) {
     return NextResponse.json({isLogeIn:false,user:null, message: 'Invalid credentials' }, { status: 401 });
   }
-  const secret = process.env.JWT_SECRET || 'your_super_secret_key_please_change_this_in_production';
+  const secret = process.env.JWT_SECRET || 'jhfckhg';
   const token = jwt.sign({ userId: user.id, username: user.userName }, secret, { expiresIn: '1h' });
     const response = NextResponse.json({isLoggedIn: true, user: {userId:user.id,username:user.userName}, message: 'Logged in successfully' });
   response.cookies.set('auth_token', token, {
     httpOnly: true,
     secure: false,
-    sameSite: 'none',
+    sameSite: 'lax',
     maxAge: 60 * 60,
     path: '/',
   });

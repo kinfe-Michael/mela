@@ -61,6 +61,7 @@ const ProductCard: React.FC<ProductCardProps> = ({ product, showActions = false 
             <Image
               src={product.imageUrl || 'https://placehold.co/300x192/EEF2FF/3F20BA?text=No+Image'}
               alt={product.name}
+              unoptimized={true} // Disables Next.js Image Optimization
               layout="fill"
               objectFit="cover"
               className="rounded-t-lg"
